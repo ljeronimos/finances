@@ -285,3 +285,11 @@ input:focus, select:focus {
     border-radius: 4px;
     font-size: 0.75rem;
 }
+
+.version {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+  display: block;
+}

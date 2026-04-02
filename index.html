@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="manifest" href="manifest.json" />
+    <link rel="manifest" href="finances.json" />
 
     <title>My Finances</title>
     <link rel="stylesheet" href="style.css" />
@@ -15,6 +15,7 @@
             <div class="accent-line"></div>
             <h1>Expense Entry</h1>
             <p>Log a new shared expense</p>
+            <span class="version" id="swVersion">…</span>
         </div>
 
         <div class="offline-banner" id="offlineBanner">
@@ -92,5 +93,18 @@
         </form>
     </div>
     <script src="app.js" defer></script>
+
+    <!-- Register the app's service worker. -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("sw.js");
+        }
+
+        navigator.serviceWorker.addEventListener('message', e => {
+            if (e.data?.type === 'SW_VERSION') {
+                document.getElementById('swVersion').textContent = e.data.version;
+            }
+        });
+    </script>
 </body>
 </html>
