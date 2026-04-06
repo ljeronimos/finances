@@ -1,4 +1,4 @@
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 const CACHE_NAME = `finances-${VERSION}`;
 
 const APP_STATIC_RESOURCES = [
@@ -30,10 +30,6 @@ self.addEventListener('activate', event => {
                     .map(name => caches.delete(name))
             );
             await self.clients.claim();
-
-            // Tell all open tabs the current SW version
-            const clients = await self.clients.matchAll({ includeUncontrolled: true });
-            clients.forEach(client => client.postMessage({ type: 'SW_VERSION', version: CACHE_NAME }));
         })()
     );
 });

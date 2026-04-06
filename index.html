@@ -16,7 +16,7 @@
             <div class="accent-line"></div>
             <h1>Expense Entry</h1>
             <p>Log a new shared expense</p>
-            <span class="version" id="swVersion">…</span>
+            <span class="version">v1.0.1</span>
         </div>
 
         <div class="offline-banner" id="offlineBanner">
@@ -98,15 +98,8 @@
     <script src="app.js" defer></script>
 
     <script>
-        // SW registration and version display
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(console.warn);
-
-            navigator.serviceWorker.addEventListener('message', e => {
-                if (e.data?.type === 'SW_VERSION') {
-                    document.getElementById('swVersion').textContent = e.data.version;
-                }
-            });
         }
     </script>
 </body>
