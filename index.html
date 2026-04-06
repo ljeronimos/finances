@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="manifest" href="finances.json" />
+    <link rel="manifest" href="finances.json">
 
     <title>My Finances</title>
-    <link rel="stylesheet" href="style.css" />
+    <!--<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">-->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="card">
@@ -25,86 +26,88 @@
         <form id="expenseForm" novalidate>
 
             <div class="form-group">
-            <label for="description">Expense Description</label>
-            <input type="text" id="description" name="description"
-                    placeholder="e.g. Groceries at Continente"
-                    autocomplete="off" autocorrect="off" spellcheck="false"
-                    inputmode="text" required />
+                <label for="description">Expense Description</label>
+                <input type="text" id="description" name="description"
+                        placeholder="e.g. Groceries at Continente"
+                        autocomplete="off" autocorrect="off" spellcheck="false" inputmode="text" required />
             </div>
 
             <div class="row">
-            <div class="form-group">
-                <label for="amount">Amount (€)</label>
-                <input type="number" id="amount" name="amount"
-                    placeholder="0.00" step="0.01" min="0"
-                    inputmode="decimal" required />
-            </div>
-            <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" id="date" name="date" required />
-            </div>
+                <div class="form-group">
+                    <label for="amount">Amount (€)</label>
+                    <input type="number" id="amount" name="amount"
+                        placeholder="0.00" step="0.01" min="0"
+                        inputmode="decimal" required />
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date" required />
+                </div>
             </div>
 
             <div class="form-group">
-            <label for="category">Category</label>
-            <div class="select-wrapper">
-                <select id="category" name="category" required>
-                <option value="" disabled selected>Loading categories…</option>
-                </select>
-            </div>
-            <div class="category-status" id="categoryStatus"></div>
+                <label for="category">Category</label>
+                <div class="select-wrapper">
+                    <select id="category" name="category" required>
+                        <option value="" disabled selected>Loading categories…</option>
+                    </select>
+                </div>
+                <div class="category-status" id="categoryStatus"></div>
             </div>
 
             <div class="divider"></div>
 
             <div class="form-group">
-            <label>Shared</label>
-            <div class="radio-group">
-                <div class="radio-option">
-                <input type="radio" id="shared_yes" name="shared" value="Yes" required />
-                <label for="shared_yes">Yes</label>
+                <label>Shared</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="shared_yes" name="shared" value="Yes" required />
+                        <label for="shared_yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="shared_no" name="shared" value="No" />
+                        <label for="shared_no">No</label>
+                    </div>
                 </div>
-                <div class="radio-option">
-                <input type="radio" id="shared_no" name="shared" value="No" />
-                <label for="shared_no">No</label>
-                </div>
-            </div>
             </div>
 
             <div class="form-group">
-            <label>Paid By</label>
-            <div class="radio-group">
-                <div class="radio-option">
-                <input type="radio" id="paid_luis" name="paidBy" value="Luis" required />
-                <label for="paid_luis">Luis</label>
+                <label>Paid By</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="paid_luis" name="paidBy" value="Luis" required />
+                        <label for="paid_luis">Luis</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="paid_sara" name="paidBy" value="Sara" />
+                        <label for="paid_sara">Sara</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="paid_joint" name="paidBy" value="Joint" />
+                        <label for="paid_joint">Joint</label>
+                    </div>
                 </div>
-                <div class="radio-option">
-                <input type="radio" id="paid_sara" name="paidBy" value="Sara" />
-                <label for="paid_sara">Sara</label>
-                </div>
-                <div class="radio-option">
-                <input type="radio" id="paid_joint" name="paidBy" value="Joint" />
-                <label for="paid_joint">Joint</label>
-                </div>
-            </div>
             </div>
 
             <button type="submit" class="btn-submit" id="submitBtn">Submit Expense</button>
         </form>
     </div>
+
+    <div class="toast" id="toast"></div>
+
     <script src="app.js" defer></script>
 
-    <!-- Register the app's service worker. -->
     <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("sw.js");
-        }
+        // SW registration and version display
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(console.warn);
 
-        navigator.serviceWorker.addEventListener('message', e => {
-            if (e.data?.type === 'SW_VERSION') {
-                document.getElementById('swVersion').textContent = e.data.version;
-            }
-        });
+            navigator.serviceWorker.addEventListener('message', e => {
+                if (e.data?.type === 'SW_VERSION') {
+                    document.getElementById('swVersion').textContent = e.data.version;
+                }
+            });
+        }
     </script>
 </body>
 </html>

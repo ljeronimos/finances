@@ -1,13 +1,22 @@
 {
-  "name": "My finances",
-  "short_name": "Fin",
+  "name": "My Finances",
+  "short_name": "Finances",
+  "description": "Log shared expenses",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "icons/512.png",
+      "src": "/icons/512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "512x512"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/512.png",
+      "sizes": "512x512",
+      "type": "image/png",      
+      "purpose": "maskable"
     }
-  ],
-  "start_url": "./index.html",
-  "display": "standalone"
+  ]
 }
