@@ -13,19 +13,10 @@
 <body>
     <div class="card">
         <div class="card-header">
-            <div class="card-header-row">
-                <div>
-                    <div class="accent-line"></div>
-                    <h1>Expense Entry</h1>
-                    <p>Log a new shared expense</p>
-                </div>
-                <div class="header-actions">
-                    <a href="settings.html" class="icon-btn" title="Settings">⚙️</a>
-                    <button class="icon-btn" id="signOutBtn" title="Sign out">🚪</button>
-                </div>
-            </div>
-            <span class="user-badge" id="userBadge">…</span>
-            <span class="version">v1.1.0</span>
+            <div class="accent-line"></div>
+            <h1>Expense Entry</h1>
+            <p>Log a new shared expense</p>
+            <span class="version">v1.0.1</span>
         </div>
 
         <div class="offline-banner" id="offlineBanner">
@@ -91,7 +82,7 @@
                         <input type="radio" id="paid_sara" name="paidBy" value="Sara" />
                         <label for="paid_sara">Sara</label>
                     </div>
-                    <div class="radio-option" id="paidJointOption">
+                    <div class="radio-option">
                         <input type="radio" id="paid_joint" name="paidBy" value="Joint" />
                         <label for="paid_joint">Joint</label>
                     </div>
@@ -104,6 +95,12 @@
 
     <div class="toast" id="toast"></div>
 
-    <script type="module" src="app.js"></script>
+    <script src="app.js" defer></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(console.warn);
+        }
+    </script>
 </body>
 </html>

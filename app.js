@@ -1,102 +1,29 @@
-import {
-    checkSession,
-    clearSession,
-    getAuthHeaders,
-    getSession,
-    showToast,
-    initOfflineBanner,
-} from './auth.js';
+// ── Online / Offline banner ──────────────────────────────────────────────────
 
-// ── Session check ─────────────────────────────────────────────────────────────
-
-(async () => {
-    const { valid, session, offline } = await checkSession();
-
-    if (!valid) {
-        window.location.replace('/login.html');
-        return;
-    }
-
-    // Show user badge
-    const displayName = session.user?.user_metadata?.display_name
-        || localStorage.getItem('display_name')
-        || session.user?.email;
-    document.getElementById('userBadge').textContent = displayName;
-
-    loadCategories();
-
-    if (!offline) applyDefaultPreferences();
-})();
-
-// ── Sign out ──────────────────────────────────────────────────────────────────
-
-document.getElementById('signOutBtn').addEventListener('click', () => {
-    clearSession();
-    window.location.replace('/login.html');
+function updateOnlineStatus() {
+    document.getElementById('offlineBanner').classList.toggle('visible', !navigator.onLine);
+}
+window.addEventListener('online', () => {
+    updateOnlineStatus();
+    flushPending(); // Firefox fallback: flush queued expenses when back online
 });
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
 
-// ── Online / Offline banner ───────────────────────────────────────────────────
-
-initOfflineBanner();
-
-window.addEventListener('online', flushPending);
-
-// ── Default date ──────────────────────────────────────────────────────────────
+// ── Default date ─────────────────────────────────────────────────────────────
 
 document.getElementById('date').valueAsDate = new Date();
 
-// ── Default preferences ───────────────────────────────────────────────────────
+// ── Toast ────────────────────────────────────────────────────────────────────
 
-async function applyDefaultPreferences() {
-    try {
-        const res = await fetch('/api/settings', { headers: getAuthHeaders() });
-        if (!res.ok) return;
-        const data = await res.json();
-        const prefs = data.preferences;
-
-        if (prefs?.display_name) {
-            localStorage.setItem('display_name', prefs.display_name);
-            document.getElementById('userBadge').textContent = prefs.display_name;
-        }
-
-        if (prefs?.default_paid_by) {
-            const radio = document.querySelector(`input[name="paidBy"][value="${prefs.default_paid_by}"]`);
-            if (radio) radio.checked = true;
-        }
-
-        if (prefs?.default_shared) {
-            const radio = document.querySelector(`input[name="shared"][value="${prefs.default_shared}"]`);
-            if (radio) {
-                radio.checked = true;
-                updateJointOption(prefs.default_shared);
-            }
-        }
-    } catch {
-        // Preferences are a convenience, not critical
-    }
+function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.className = 'toast', 3500);
 }
 
-// ── Shared / Joint validation ─────────────────────────────────────────────────
-
-function updateJointOption(sharedValue) {
-    const jointOption = document.getElementById('paidJointOption');
-    const jointRadio = document.getElementById('paid_joint');
-
-    if (sharedValue === 'No') {
-        jointOption.classList.add('disabled');
-        jointRadio.disabled = true;
-        if (jointRadio.checked) jointRadio.checked = false;
-    } else {
-        jointOption.classList.remove('disabled');
-        jointRadio.disabled = false;
-    }
-}
-
-document.querySelectorAll('input[name="shared"]').forEach(radio => {
-    radio.addEventListener('change', e => updateJointOption(e.target.value));
-});
-
-// ── Categories ────────────────────────────────────────────────────────────────
+// ── Categories ───────────────────────────────────────────────────────────────
 
 const DEFAULT_CATEGORIES = [
     'Groceries', 'Food & Drinks', 'Accommodation', 'Car', 'Fuel', 'Tolls', 'Parking',
@@ -107,13 +34,14 @@ const DEFAULT_CATEGORIES = [
 
 async function loadCategories() {
     const status = document.getElementById('categoryStatus');
+
+    // Load from cache first so the select is never empty
     const cached = localStorage.getItem('categories');
     populateCategories(cached ? JSON.parse(cached) : DEFAULT_CATEGORIES);
 
-    if (!navigator.onLine) return;
-
+    // Fetch live from Pages Function in background
     try {
-        const res = await fetch('/api/categories', { headers: getAuthHeaders() });
+        const res = await fetch('/api/categories');
         if (res.ok) {
             const data = await res.json();
             const categories = data.map(r => r.category);
@@ -136,7 +64,11 @@ function populateCategories(categories) {
     });
 }
 
+loadCategories();
+
 // ── IndexedDB offline queue ───────────────────────────────────────────────────
+// Duplicated from sw.js so Firefox can flush pending on page load
+// (Firefox doesn't support Background Sync)
 
 function openDB() {
     return new Promise((res, rej) => {
@@ -179,7 +111,7 @@ async function queueOffline(payload) {
     });
 }
 
-// Flush queued expenses — called on load and when back online (Firefox fallback)
+// Firefox-safe flush: called on page load and when coming back online
 async function flushPending() {
     if (!navigator.onLine) return;
     let db;
@@ -191,25 +123,24 @@ async function flushPending() {
     const pending = await getAllPending(db);
     if (pending.length === 0) return;
 
-    const session = getSession();
-    const headers = {
-        'Content-Type': 'application/json',
-        ...(session ? { 'Authorization': `Bearer ${session.accessToken}` } : {}),
-    };
-
     let flushed = 0;
     for (const item of pending) {
         try {
-            const res = await fetch(item.url, { method: 'POST', headers, body: item.body });
+            const res = await fetch(item.url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: item.body,
+            });
             if (res.ok) {
                 await deletePending(db, item.id);
                 flushed++;
             }
-        } catch { /* retry next time */ }
+        } catch { /* will retry next time */ }
     }
-    if (flushed > 0) showToast(`✓ ${flushed} offline expense${flushed > 1 ? 's' : ''} synced`);
+    if (flushed > 0) showToast(`✓ ${flushed} offline expense${flushed > 1 ? 's' : ''} synced`, 'success');
 }
 
+// Flush any pending expenses on page load (Firefox fallback)
 window.addEventListener('load', flushPending);
 
 // ── Form submit ───────────────────────────────────────────────────────────────
@@ -222,11 +153,6 @@ document.getElementById('expenseForm').addEventListener('submit', async (e) => {
 
     if (!shared || !paidBy) {
         showToast('Please select all options.', 'error');
-        return;
-    }
-
-    if (shared.value === 'No' && paidBy.value === 'Joint') {
-        showToast('Joint is not allowed for non-shared expenses.', 'error');
         return;
     }
 
@@ -243,13 +169,15 @@ document.getElementById('expenseForm').addEventListener('submit', async (e) => {
         paid_by: paidBy.value,
     };
 
+    // Queue offline if no connection
     if (!navigator.onLine) {
         await queueOffline(payload);
+        // Background Sync for Chrome/Android
         if ('serviceWorker' in navigator && 'SyncManager' in window) {
             const reg = await navigator.serviceWorker.ready;
             await reg.sync.register('pending-expenses');
         }
-        showToast('Saved offline — will sync when reconnected');
+        showToast('Saved offline — will sync when reconnected', 'success');
         resetForm(form, btn);
         return;
     }
@@ -257,12 +185,12 @@ document.getElementById('expenseForm').addEventListener('submit', async (e) => {
     try {
         const res = await fetch('/api/expenses', {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
         });
         const data = await res.json();
         if (res.ok) {
-            showToast('✓ Expense logged!');
+            showToast('✓ Expense logged!', 'success');
             resetForm(form, btn);
         } else {
             throw new Error(data.error || 'Unknown error');
@@ -276,7 +204,6 @@ document.getElementById('expenseForm').addEventListener('submit', async (e) => {
 function resetForm(form, btn) {
     form.reset();
     document.getElementById('date').valueAsDate = new Date();
-    applyDefaultPreferences();
     resetSubmitBtn(btn);
 }
 
