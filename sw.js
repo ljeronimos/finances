@@ -1,11 +1,16 @@
-const VERSION = '1.0.1';
+const VERSION = '1.1.0';
 const CACHE_NAME = `finances-${VERSION}`;
 
 const APP_STATIC_RESOURCES = [
     '/',
     '/index.html',
-    '/style.css',
+    '/login.html',
+    '/settings.html',
     '/app.js',
+    '/auth.js',
+    '/login.js',
+    '/settings.js',
+    '/style.css',
     '/finances.json',
     '/icons/512.png',
 ];
@@ -37,27 +42,21 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     const url = new URL(event.request.url);
 
-    // Pass through non-GET requests
     if (event.request.method !== 'GET') {
         event.respondWith(fetch(event.request));
         return;
     }
 
-    // Network-first for external URLs (fonts, APIs)
     if (url.hostname !== self.location.hostname) {
-        event.respondWith(
-            fetch(event.request).catch(() => new Response('', { status: 503 }))
-        );
+        event.respondWith(fetch(event.request).catch(() => new Response('', { status: 503 })));
         return;
     }
 
-    // Skip Cloudflare auth paths — never cache
     if (url.pathname.includes('/cdn-cgi/') || url.searchParams.has('code')) {
         event.respondWith(fetch(event.request));
         return;
     }
 
-    // Network-first for Pages Functions API calls — always want fresh data
     if (url.pathname.startsWith('/api/')) {
         event.respondWith(
             fetch(event.request).catch(() => new Response(
@@ -68,7 +67,6 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // Cache-first for all other local assets
     event.respondWith(
         (async () => {
             const cached = await caches.match(event.request);
@@ -88,11 +86,8 @@ self.addEventListener('fetch', event => {
     );
 });
 
-// Background sync — flush queued offline expenses (Chrome/Android only)
 self.addEventListener('sync', event => {
-    if (event.tag === 'pending-expenses') {
-        event.waitUntil(flushPending());
-    }
+    if (event.tag === 'pending-expenses') event.waitUntil(flushPending());
 });
 
 async function flushPending() {
@@ -106,11 +101,9 @@ async function flushPending() {
                 body: item.body,
             });
             if (res.ok) await deletePending(db, item.id);
-        } catch (_) { /* will retry on next sync */ }
+        } catch (_) {}
     }
 }
-
-// ── IndexedDB helpers (mirrored in app.js for Firefox fallback) ──
 
 function openDB() {
     return new Promise((res, rej) => {

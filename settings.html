@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="finances.json">
+    <title>My Finances — Settings</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="accent-line"></div>
+            <h1>Settings</h1>
+            <p id="userEmail">Loading…</p>
+            <span class="version">v1.1.0</span>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to app</a>
+
+        <!-- Account -->
+        <div class="settings-section">
+            <div class="settings-section-title">Account</div>
+            <div class="settings-row">
+                <div>
+                    <div class="settings-row-label">Display name</div>
+                    <div class="settings-row-sub" id="currentDisplayName">—</div>
+                </div>
+                <button class="btn-small" id="editNameBtn">Edit</button>
+            </div>
+            <div class="settings-row">
+                <div>
+                    <div class="settings-row-label">Change password</div>
+                    <div class="settings-row-sub">Send a reset link to your email</div>
+                </div>
+                <button class="btn-small" id="changePasswordBtn">Send</button>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Preferences -->
+        <div class="settings-section">
+            <div class="settings-section-title">Preferences</div>
+            <div class="settings-row">
+                <div class="settings-row-label">Default paid by</div>
+                <select class="settings-select" id="defaultPaidBy">
+                    <option value="">None</option>
+                    <option value="Luis">Luis</option>
+                    <option value="Sara">Sara</option>
+                    <option value="Joint">Joint</option>
+                </select>
+            </div>
+            <div class="settings-row">
+                <div class="settings-row-label">Default shared</div>
+                <select class="settings-select" id="defaultShared">
+                    <option value="">None</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="settings-row">
+                <div style="width:100%">
+                    <button class="btn-submit" id="savePrefsBtn" style="margin-top:0.25rem">Save Preferences</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Registered devices -->
+        <div class="settings-section">
+            <div class="settings-section-title">Registered Devices</div>
+            <div id="deviceList"><div class="no-devices">Loading…</div></div>
+            <button class="btn-submit" id="registerDeviceBtn" style="margin-top:1rem;display:none">
+                🔐 Register this device
+            </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Account actions -->
+        <div class="settings-section">
+            <div class="settings-section-title">Account Actions</div>
+            <div class="settings-row">
+                <div>
+                    <div class="settings-row-label">Sign out</div>
+                    <div class="settings-row-sub">Sign out on this device</div>
+                </div>
+                <button class="btn-small" id="signOutBtn">Sign out</button>
+            </div>
+            <div class="settings-row">
+                <div>
+                    <div class="settings-row-label">Delete account</div>
+                    <div class="settings-row-sub">Permanently delete your account</div>
+                </div>
+                <button class="btn-small btn-danger" id="deleteAccountBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit name modal -->
+    <div class="modal-overlay" id="editNameModal">
+        <div class="modal">
+            <h2>Display name</h2>
+            <p>This is how your name appears in the app and on expenses.</p>
+            <div class="form-group">
+                <input type="text" id="newDisplayName" placeholder="e.g. Luis" autocomplete="off" />
+            </div>
+            <div class="modal-actions">
+                <button class="btn-small" id="cancelNameBtn">Cancel</button>
+                <button class="btn-submit" id="saveNameBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete account modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <h2>Delete account?</h2>
+            <p>This will permanently delete your account and all registered devices. Your expenses will remain in the database.</p>
+            <div class="modal-actions">
+                <button class="btn-small" id="cancelDeleteBtn">Cancel</button>
+                <button class="btn-submit" style="background:var(--error)" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module" src="settings.js"></script>
+</body>
+</html>
