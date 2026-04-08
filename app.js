@@ -7,8 +7,10 @@ import {
 
 (async () => {
     const { valid, session, offline } = await checkSession();
+    console.log("index.html - Session valid:", valid);
 
     if (!valid) {
+        console.log("Redirecting to login...");
         window.location.replace('/login.html');
         return;
     }

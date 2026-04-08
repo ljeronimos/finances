@@ -9,7 +9,12 @@ import { showToast } from './app.js';
 
 (async () => {
     const { valid } = await checkSession();
-    if (valid) window.location.replace('/index.html');
+    console.log("login.html - Session valid:", valid);
+
+    if (valid){
+        console.log("Redirecting to index...");
+        window.location.replace('/index.html');
+    }
 })();
 
 // ── Offline handling ──────────────────────────────────────────────────────────
