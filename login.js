@@ -1,9 +1,6 @@
 import {
     checkSession,
-    saveSession,
-    showToast,
-    webAuthnSupported,
-    loginWithWebAuthn,
+    saveSession
 } from './auth.js';
 
 import { showToast } from './app.js';

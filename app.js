@@ -1,10 +1,6 @@
 import {
     checkSession,
-    clearSession,
-    getAuthHeaders,
-    getSession,
-    showToast,
-    initOfflineBanner,
+    clearSession
 } from './auth.js';
 
 // ── Session check ─────────────────────────────────────────────────────────────
@@ -34,6 +30,15 @@ document.getElementById('signOutBtn').addEventListener('click', () => {
     clearSession();
     window.location.replace('/login.html');
 });
+
+
+export function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.className = 'toast', 3500);
+}
 
 
 // ── Online / Offline banner ──────────────────────────────────────────────────
