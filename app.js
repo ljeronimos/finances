@@ -1,3 +1,41 @@
+import {
+    checkSession,
+    clearSession,
+    getAuthHeaders,
+    getSession,
+    showToast,
+    initOfflineBanner,
+} from './auth.js';
+
+// ── Session check ─────────────────────────────────────────────────────────────
+
+(async () => {
+    const { valid, session, offline } = await checkSession();
+
+    if (!valid) {
+        window.location.replace('/login.html');
+        return;
+    }
+
+    // Show user badge
+    const displayName = session.user?.user_metadata?.display_name
+        || localStorage.getItem('display_name')
+        || session.user?.email;
+    document.getElementById('userBadge').textContent = displayName;
+
+    loadCategories();
+
+    if (!offline) applyDefaultPreferences();
+})();
+
+// ── Sign out ──────────────────────────────────────────────────────────────────
+
+document.getElementById('signOutBtn').addEventListener('click', () => {
+    clearSession();
+    window.location.replace('/login.html');
+});
+
+
 // ── Online / Offline banner ──────────────────────────────────────────────────
 
 function updateOnlineStatus() {
@@ -14,14 +52,6 @@ updateOnlineStatus();
 
 document.getElementById('date').valueAsDate = new Date();
 
-// ── Toast ────────────────────────────────────────────────────────────────────
-
-function showToast(msg, type = 'success') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = `toast ${type} show`;
-    setTimeout(() => t.className = 'toast', 3500);
-}
 
 // ── Categories ───────────────────────────────────────────────────────────────
 
