@@ -19,7 +19,9 @@ import {
     const displayName = session.user?.user_metadata?.display_name
         || localStorage.getItem('display_name')
         || session.user?.email;
-    document.getElementById('userBadge').textContent = displayName;
+    
+    const badge = document.getElementById('userBadge');
+    if (badge) badge.textContent = displayName;
 
     loadCategories();
 
@@ -29,11 +31,13 @@ import {
 // ── Sign out ──────────────────────────────────────────────────────────────────
 
 console.log("app.js - before eventListener");
-document.getElementById('signOutBtn').addEventListener('click', () => {
-    clearSession();
-    window.location.replace('/login.html');
-});
-
+const signOutBtn = document.getElementById('signOutBtn');
+if (signOutBtn) {
+    signOutBtn.addEventListener('click', () => {
+        clearSession();
+        window.location.replace('/login.html');
+    });
+}
 
 export function showToast(msg, type = 'success') {
     const t = document.getElementById('toast');
@@ -58,7 +62,8 @@ updateOnlineStatus();
 
 // ── Default date ─────────────────────────────────────────────────────────────
 
-document.getElementById('date').valueAsDate = new Date();
+const dateInput = document.getElementById('date');
+if (dateInput) dateInput.valueAsDate = new Date();
 
 
 // ── Categories ───────────────────────────────────────────────────────────────
