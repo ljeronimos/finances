@@ -28,6 +28,7 @@ import {
 
 // ── Sign out ──────────────────────────────────────────────────────────────────
 
+console.log("app.js - before eventListener");
 document.getElementById('signOutBtn').addEventListener('click', () => {
     clearSession();
     window.location.replace('/login.html');
