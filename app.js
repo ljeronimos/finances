@@ -1,6 +1,7 @@
 import {
     checkSession,
-    clearSession
+    clearSession,
+    showToast
 } from './auth.js';
 
 // ── Session check ─────────────────────────────────────────────────────────────
@@ -37,14 +38,6 @@ if (signOutBtn) {
         clearSession();
         window.location.replace('/login.html');
     });
-}
-
-export function showToast(msg, type = 'success') {
-    const t = document.getElementById('toast');
-    if (!t) return;
-    t.textContent = msg;
-    t.className = `toast ${type} show`;
-    setTimeout(() => t.className = 'toast', 3500);
 }
 
 

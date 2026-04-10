@@ -68,3 +68,11 @@ export function saveSession(accessToken, refreshToken, user) {
 export function clearSession() {
     localStorage.removeItem(SESSION_KEY);
 }
+
+export function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.className = 'toast', 3500);
+}

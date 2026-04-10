@@ -1,9 +1,8 @@
 import {
     checkSession,
-    saveSession
+    saveSession,
+    showToast
 } from './auth.js';
-
-import { showToast } from './app.js';
 
 // ── Redirect if already logged in ────────────────────────────────────────────
 
