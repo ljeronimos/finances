@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="finances.json">
+    <title>My Finances — Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-header-row">
+                <div>
+                    <div class="accent-line"></div>
+                    <h1>Dashboard</h1>
+                    <p>Spending overview</p>
+                </div>
+                <div class="header-actions">
+                    <a href="settings.html" class="icon-btn" title="Settings">⚙️</a>
+                    <button class="icon-btn" id="signOutBtn" title="Sign out">🚪</button>
+                </div>
+            </div>
+            <span class="user-badge" id="userBadge">…</span>
+            <span class="version">v1.1.0</span>
+        </div>
+
+        <div class="placeholder-note">
+            🚧 This page is a preview — data is placeholder only. Backend coming soon.
+        </div>
+
+        <!-- Period tabs -->
+        <div class="period-tabs">
+            <button class="period-tab active" data-period="month">Month</button>
+            <button class="period-tab" data-period="quarter">Quarter</button>
+            <button class="period-tab" data-period="year">Year</button>
+        </div>
+
+        <!-- Top stats -->
+        <div class="stat-grid" style="margin-bottom:1.25rem">
+            <div class="stat-card">
+                <div class="stat-label">Total Spent</div>
+                <div class="stat-value">€1,842</div>
+                <div class="stat-sub">April 2026</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">vs Last Month</div>
+                <div class="stat-value negative">+€214</div>
+                <div class="stat-sub">+13% higher</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Luis paid</div>
+                <div class="stat-value">€1,120</div>
+                <div class="stat-sub">60.8%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Sara paid</div>
+                <div class="stat-value">€722</div>
+                <div class="stat-sub">39.2%</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Spending chart placeholder -->
+        <div style="margin-bottom:0.75rem">
+            <label style="margin-bottom:0">Daily spending</label>
+        </div>
+
+        <div class="chart-placeholder">
+            <div class="chart-icon">📊</div>
+            <span>Bar chart — coming soon</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Category breakdown -->
+        <div style="margin-bottom:0.75rem">
+            <label style="margin-bottom:0">By category</label>
+        </div>
+
+        <div class="category-breakdown">
+            <div class="category-row">
+                <div class="category-row-label">Groceries</div>
+                <div class="category-bar-track">
+                    <div class="category-bar-fill" style="width:72%"></div>
+                </div>
+                <div class="category-row-amount">€420</div>
+            </div>
+            <div class="category-row">
+                <div class="category-row-label">House 50/50</div>
+                <div class="category-bar-track">
+                    <div class="category-bar-fill" style="width:58%"></div>
+                </div>
+                <div class="category-row-amount">€340</div>
+            </div>
+            <div class="category-row">
+                <div class="category-row-label">Food & Drinks</div>
+                <div class="category-bar-track">
+                    <div class="category-bar-fill" style="width:42%"></div>
+                </div>
+                <div class="category-row-amount">€245</div>
+            </div>
+            <div class="category-row">
+                <div class="category-row-label">Fuel</div>
+                <div class="category-bar-track">
+                    <div class="category-bar-fill" style="width:30%"></div>
+                </div>
+                <div class="category-row-amount">€175</div>
+            </div>
+            <div class="category-row">
+                <div class="category-row-label">Health</div>
+                <div class="category-bar-track">
+                    <div class="category-bar-fill" style="width:22%"></div>
+                </div>
+                <div class="category-row-amount">€130</div>
+            </div>
+            <div class="category-row">
+                <div class="category-row-label">Others</div>
+                <div class="category-bar-track">
+                    <div class="category-bar-fill" style="width:15%"></div>
+                </div>
+                <div class="category-row-amount">€90</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Trend placeholder -->
+        <div style="margin-bottom:0.75rem">
+            <label style="margin-bottom:0">Monthly trend</label>
+        </div>
+
+        <div class="chart-placeholder">
+            <div class="chart-icon">📈</div>
+            <span>Line chart — coming soon</span>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">＋</span>
+            <span>Add</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <span class="nav-icon">☰</span>
+            <span>Expenses</span>
+        </a>
+        <a href="investments.html" class="nav-item">
+            <span class="nav-icon">↗</span>
+            <span>Invest</span>
+        </a>
+        <a href="dashboards.html" class="nav-item active">
+            <span class="nav-icon">◎</span>
+            <span>Dashboard</span>
+        </a>
+    </nav>
+
+    <script type="module" src="dashboards.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(console.warn);
+        }
+    </script>
+</body>
+</html>

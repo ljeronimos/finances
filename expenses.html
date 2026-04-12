@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="finances.json">
+    <title>My Finances — Expenses</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-header-row">
+                <div>
+                    <div class="accent-line"></div>
+                    <h1>Expenses</h1>
+                    <p id="periodLabel">This month</p>
+                </div>
+                <div class="header-actions">
+                    <a href="settings.html" class="icon-btn" title="Settings">⚙️</a>
+                    <button class="icon-btn" id="signOutBtn" title="Sign out">🚪</button>
+                </div>
+            </div>
+            <span class="user-badge" id="userBadge">…</span>
+            <span class="version">v1.1.0</span>
+        </div>
+
+        <div class="offline-banner" id="offlineBanner">
+            <span>📡</span> You're offline — showing cached data
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="filterPeriod">Period</label>
+                <div class="select-wrapper">
+                    <select id="filterPeriod">
+                        <option value="this_month" selected>This month</option>
+                        <option value="last_month">Last month</option>
+                        <option value="last_3_months">Last 3 months</option>
+                        <option value="last_6_months">Last 6 months</option>
+                        <option value="this_year">This year</option>
+                        <option value="all">All time</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label for="filterCategory">Category</label>
+                    <div class="select-wrapper">
+                        <select id="filterCategory">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label for="filterPaidBy">Paid by</label>
+                    <div class="select-wrapper">
+                        <select id="filterPaidBy">
+                            <option value="">All</option>
+                            <option value="Luis">Luis</option>
+                            <option value="Sara">Sara</option>
+                            <option value="Joint">Joint</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="expenses-summary">
+            <span class="total-label">Total</span>
+            <span class="total-amount" id="totalAmount">—</span>
+        </div>
+
+        <!-- List -->
+        <div class="expense-list" id="expenseList">
+            <div class="loading-state">
+                <span class="spinner" style="border-top-color:var(--accent)"></span>
+                Loading…
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">＋</span>
+            <span>Add</span>
+        </a>
+        <a href="expenses.html" class="nav-item active">
+            <span class="nav-icon">☰</span>
+            <span>Expenses</span>
+        </a>
+        <a href="investments.html" class="nav-item">
+            <span class="nav-icon">↗</span>
+            <span>Invest</span>
+        </a>
+        <a href="dashboards.html" class="nav-item">
+            <span class="nav-icon">◎</span>
+            <span>Dashboard</span>
+        </a>
+    </nav>
+
+    <script type="module" src="expenses.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(console.warn);
+        }
+    </script>
+</body>
+</html>
