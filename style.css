@@ -293,6 +293,56 @@ input:focus, select:focus {
   margin-top: 0.25rem;
   display: block;
 }
+/* ── Bottom Navigation ───────────────────────────────────────────────────── */
+
+body {
+    padding-bottom: calc(4.5rem + var(--safe-bottom));
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(4rem + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: stretch;
+    z-index: 100;
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.18s;
+    padding: 0.5rem 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item:hover { color: var(--text); }
+.nav-item.active { color: var(--accent); }
+
+.nav-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/* ── Shared header utilities ─────────────────────────────────────────────── */
 
 .card-header-row {
     display: flex;
@@ -316,6 +366,7 @@ input:focus, select:focus {
     font-size: 1.1rem;
     transition: color 0.18s;
     line-height: 1;
+    text-decoration: none;
 }
 
 .icon-btn:hover { color: var(--accent); }
@@ -331,245 +382,311 @@ input:focus, select:focus {
     display: inline-block;
 }
 
-.radio-option.disabled label {
-    opacity: 0.35;
-    cursor: not-allowed;
+/* ── Expenses page ───────────────────────────────────────────────────────── */
+
+.filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
 }
 
-.settings-section {
-    margin-bottom: 2rem;
+.filters-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
 }
 
-.settings-section-title {
-    font-size: 0.7rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent);
+.filter-group label {
+    font-size: 0.65rem;
+    margin-bottom: 0.3rem;
+}
+
+.filter-group select {
+    font-size: 14px;
+    padding: 0.55rem 0.75rem;
+    min-height: 40px;
+}
+
+.expenses-summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
     margin-bottom: 1rem;
 }
 
-.settings-row {
+.expenses-summary .total-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+.expenses-summary .total-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.expense-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.expense-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.85rem 0;
-    border-bottom: 1px solid var(--border);
-    gap: 1rem;
+    padding: 0.85rem 1rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    gap: 0.75rem;
+    transition: border-color 0.18s;
 }
 
-.settings-row:last-child { border-bottom: none; }
+.expense-item:hover { border-color: var(--accent-dim); }
 
-.settings-row-label {
-    font-size: 0.9rem;
+.expense-left { flex: 1; min-width: 0; }
+
+.expense-desc {
+    font-size: 0.875rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.2rem;
+}
+
+.expense-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.expense-tag {
+    background: rgba(212,168,83,0.08);
+    border: 1px solid rgba(212,168,83,0.2);
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.65rem;
+    color: var(--accent);
+}
+
+.expense-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.expense-paid-by {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-align: right;
+    margin-top: 0.15rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2.5rem 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.empty-state .empty-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+.loading-state {
+    text-align: center;
+    padding: 2rem 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* ── Investments page ────────────────────────────────────────────────────── */
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.stat-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+.stat-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+}
+
+.stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
     color: var(--text);
 }
 
-.settings-row-sub {
-    font-size: 0.75rem;
+.stat-value.positive { color: var(--success); }
+.stat-value.negative { color: var(--error); }
+.stat-sub {
+    font-size: 0.7rem;
     color: var(--text-muted);
     margin-top: 0.2rem;
 }
 
-.settings-row-action {
-    flex-shrink: 0;
-}
-
-.btn-small {
-    padding: 0.4rem 0.9rem;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text-muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all 0.18s;
-    white-space: nowrap;
-}
-
-.btn-small:hover { border-color: var(--accent); color: var(--accent); }
-
-.btn-danger {
-    border-color: rgba(224,82,82,0.4);
-    color: var(--error);
-}
-
-.btn-danger:hover { border-color: var(--error); background: rgba(224,82,82,0.08); color: var(--error); }
-
-.device-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.device-item {
+.investment-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.85rem 0;
+    padding: 0.9rem 0;
     border-bottom: 1px solid var(--border);
-    gap: 1rem;
+    gap: 0.75rem;
 }
 
-.device-item:last-child { border-bottom: none; }
+.investment-item:last-child { border-bottom: none; }
 
-.device-name {
-    font-size: 0.9rem;
-    color: var(--text);
-}
-
-.device-date {
-    font-size: 0.75rem;
+.investment-name { font-size: 0.875rem; color: var(--text); }
+.investment-ticker {
+    font-size: 0.7rem;
     color: var(--text-muted);
     margin-top: 0.15rem;
 }
 
-.no-devices {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    padding: 0.5rem 0;
+.investment-right { text-align: right; }
+.investment-value { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+.investment-change {
+    font-size: 0.72rem;
+    margin-top: 0.15rem;
 }
+.investment-change.up { color: var(--success); }
+.investment-change.down { color: var(--error); }
 
-.back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    text-decoration: none;
-    margin-bottom: 1.5rem;
-    transition: color 0.18s;
-}
-
-.back-link:hover { color: var(--accent); }
-
-.modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-}
-
-.modal-overlay.visible { display: flex; }
-
-.modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 1.5rem;
-    width: 100%;
-    max-width: 360px;
-}
-
-.modal h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-}
-
-.modal p {
-    color: var(--text-muted);
-    font-size: 0.875rem;
-    margin-bottom: 1.25rem;
-    line-height: 1.5;
-}
-
-.modal-actions {
+.placeholder-note {
     display: flex;
-    gap: 0.75rem;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(212,168,83,0.06);
+    border: 1px solid rgba(212,168,83,0.2);
+    border-radius: var(--radius);
+    padding: 0.65rem 0.9rem;
+    font-size: 0.78rem;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+    line-height: 1.4;
 }
 
-.modal-actions button { flex: 1; }
+/* ── Dashboard page ──────────────────────────────────────────────────────── */
 
-select.settings-select {
+.period-tabs {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+}
+
+.period-tab {
+    flex: 1;
+    padding: 0.5rem;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    color: var(--text);
+    color: var(--text-muted);
     font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    padding: 0.4rem 0.75rem;
-    min-height: 36px;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
 }
 
-.login-card { max-width: 400px; }
-
-.user-select {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
+.period-tab.active {
+    background: rgba(212,168,83,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
-.user-btn {
+.chart-placeholder {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    height: 160px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 1.25rem 0.75rem;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all 0.18s;
     color: var(--text-muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1rem;
-    min-height: 80px;
+    font-size: 0.8rem;
+    margin-bottom: 1.25rem;
 }
 
-.user-btn:hover, .user-btn.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(212,168,83,0.08);
+.chart-placeholder .chart-icon { font-size: 1.75rem; opacity: 0.4; }
+
+.category-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
 }
 
-.user-btn .avatar { font-size: 1.75rem; line-height: 1; }
-
-.separator {
+.category-row {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin: 1.25rem 0;
+}
+
+.category-row-label {
+    font-size: 0.78rem;
     color: var(--text-muted);
-    font-size: 0.75rem;
+    width: 110px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.separator::before, .separator::after {
-    content: '';
+.category-bar-track {
     flex: 1;
-    height: 1px;
+    height: 6px;
     background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
 }
 
-.webauthn-btn {
-    width: 100%;
-    padding: 0.9rem;
-    background: transparent;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.18s;
-    margin-bottom: 1rem;
-    min-height: 52px;
-    display: none;
+.category-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+    transition: width 0.6s ease;
 }
 
-.webauthn-btn.visible { display: block; }
-.webauthn-btn:hover { background: rgba(212,168,83,0.08); }
+.category-row-amount {
+    font-size: 0.78rem;
+    color: var(--text);
+    width: 56px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* ── Login page ──────────────────────────────────────────────────────────── */
+
+.login-card { max-width: 400px; }
 
 .form-actions {
     display: flex;

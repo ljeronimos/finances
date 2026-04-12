@@ -1,11 +1,22 @@
-const VERSION = '1.0.1';
+const VERSION = '1.1.0';
 const CACHE_NAME = `finances-${VERSION}`;
 
 const APP_STATIC_RESOURCES = [
     '/',
     '/index.html',
-    '/style.css',
+    '/login.html',
+    '/settings.html',
+    '/expenses.html',
+    '/investments.html',
+    '/dashboards.html',
     '/app.js',
+    '/auth.js',
+    '/login.js',
+    '/settings.js',
+    '/expenses.js',
+    '/investments.js',
+    '/dashboards.js',
+    '/style.css',
     '/finances.json',
     '/icons/512.png',
 ];

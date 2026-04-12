@@ -26,7 +26,7 @@ import {
 
     loadCategories();
 
-    if (!offline) applyDefaultPreferences();
+    //if (!offline) applyDefaultPreferences();
 })();
 
 // ── Sign out ──────────────────────────────────────────────────────────────────
@@ -247,3 +247,11 @@ function resetSubmitBtn(btn) {
     btn.disabled = false;
     btn.innerHTML = 'Submit Expense';
 }
+
+
+document.querySelectorAll(".nav-item").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelector(".nav-item.active")?.classList.remove("active");
+    btn.classList.add("active");
+  });
+});
