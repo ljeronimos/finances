@@ -1,3 +1,9 @@
+// ── auth.js — shared browser utilities ───────────────────────────────────────
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(console.warn);
+}
+
 const SESSION_KEY = 'finances_session';
 
 // Validates session:
@@ -67,6 +73,15 @@ export function saveSession(accessToken, refreshToken, user) {
 
 export function clearSession() {
     localStorage.removeItem(SESSION_KEY);
+}
+
+export function getAuthHeaders() {
+    const session = getSession();
+    if (!session) return { 'Content-Type': 'application/json' };
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.accessToken}`,
+    };
 }
 
 export function showToast(msg, type = 'success') {

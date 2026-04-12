@@ -1,7 +1,8 @@
 import {
     checkSession,
     clearSession,
-    showToast
+    showToast,
+    getAuthHeaders,
 } from './auth.js';
 
 // ── Session check ─────────────────────────────────────────────────────────────
@@ -31,7 +32,6 @@ import {
 
 // ── Sign out ──────────────────────────────────────────────────────────────────
 
-console.log("app.js - before eventListener");
 const signOutBtn = document.getElementById('signOutBtn');
 if (signOutBtn) {
     signOutBtn.addEventListener('click', () => {
@@ -39,7 +39,6 @@ if (signOutBtn) {
         window.location.replace('/login.html');
     });
 }
-
 
 // ── Online / Offline banner ──────────────────────────────────────────────────
 
@@ -77,7 +76,7 @@ async function loadCategories() {
 
     // Fetch live from Pages Function in background
     try {
-        const res = await fetch('/api/categories');
+        const res = await fetch('/api/categories', { headers: getAuthHeaders() });
         if (res.ok) {
             const data = await res.json();
             const categories = data.map(r => r.category);
@@ -91,6 +90,7 @@ async function loadCategories() {
 
 function populateCategories(categories) {
     const select = document.getElementById('category');
+    if (!select) return;
     select.innerHTML = '<option value="" disabled selected>Select a category</option>';
     categories.forEach(c => {
         const opt = document.createElement('option');
@@ -249,9 +249,9 @@ function resetSubmitBtn(btn) {
 }
 
 
-document.querySelectorAll(".nav-item").forEach(btn => {
+/*document.querySelectorAll(".nav-item").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelector(".nav-item.active")?.classList.remove("active");
     btn.classList.add("active");
   });
-});
+});*/
