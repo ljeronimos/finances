@@ -1,4 +1,4 @@
-const VERSION = '1.1.0';
+const VERSION = '1.1.1';
 const CACHE_NAME = `finances-${VERSION}`;
 
 const APP_STATIC_RESOURCES = [
@@ -9,6 +9,7 @@ const APP_STATIC_RESOURCES = [
     '/expenses.html',
     '/investments.html',
     '/dashboards.html',
+    '/budget.html',
     '/app.js',
     '/auth.js',
     '/login.js',
@@ -16,6 +17,7 @@ const APP_STATIC_RESOURCES = [
     '/expenses.js',
     '/investments.js',
     '/dashboards.js',
+    '/budget.js',
     '/style.css',
     '/finances.json',
     '/icons/512.png',

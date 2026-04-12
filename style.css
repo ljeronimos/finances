@@ -741,3 +741,313 @@ input[type="email"]:focus, input[type="password"]:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(212,168,83,0.12);
 }
+
+/* ── Month navigator ─────────────────────────────────────────────── */
+.month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    gap: 0.5rem;
+}
+
+.month-nav-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.18s;
+    flex-shrink: 0;
+}
+
+.month-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.month-nav-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    flex: 1;
+}
+
+.month-badge {
+    font-size: 0.65rem;
+    color: var(--success);
+    background: rgba(76,175,125,0.1);
+    border: 1px solid rgba(76,175,125,0.25);
+    border-radius: 999px;
+    padding: 0.15rem 0.5rem;
+}
+
+/* ── Income section ──────────────────────────────────────────────── */
+.income-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.income-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.85rem;
+}
+
+.income-card-name {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.income-updated-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    display: none;
+}
+
+.income-updated-dot.visible { display: block; }
+
+.income-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.income-currency {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.income-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    color: var(--text);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0.2rem 0;
+    outline: none;
+    min-height: auto;
+    width: 100%;
+    transition: border-color 0.2s;
+}
+
+.income-input:focus { border-color: var(--accent); }
+.income-input::placeholder { color: var(--border); font-size: 1rem; }
+
+.income-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    margin-bottom: 1.25rem;
+}
+
+.income-summary-item { text-align: center; flex: 1; }
+
+.income-summary-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.income-summary-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.income-summary-value.positive { color: var(--success); }
+.income-summary-value.negative { color: var(--error); }
+.income-summary-value.neutral { color: var(--text); }
+
+.income-summary-divider {
+    width: 1px;
+    height: 36px;
+    background: var(--border);
+}
+
+/* ── Budget rows ─────────────────────────────────────────────────── */
+.budget-row {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.budget-row:last-child { border-bottom: none; }
+
+.budget-row-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+}
+
+.budget-category-name {
+    font-size: 0.85rem;
+    color: var(--text);
+    flex: 1;
+}
+
+.budget-amounts {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.budget-amounts .spent { color: var(--text); font-weight: 500; }
+.budget-amounts .over { color: var(--error); font-weight: 500; }
+
+/* Progress bar */
+.budget-progress-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 0.6rem;
+}
+
+.budget-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.4s ease, background 0.3s;
+}
+
+/* Input row: slider + text field */
+.budget-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.budget-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+    min-height: auto;
+    padding: 0;
+    border: none;
+}
+
+.budget-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 2px solid var(--surface);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.budget-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 2px solid var(--surface);
+}
+
+.budget-text-input {
+    width: 80px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 0.35rem 0.5rem;
+    outline: none;
+    text-align: right;
+    min-height: auto;
+    transition: border-color 0.2s;
+}
+
+.budget-text-input:focus { border-color: var(--accent); }
+
+.save-budget-btn {
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+/* Summary bar at bottom of budget section */
+.budget-totals {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.85rem 1rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.budget-totals-item { text-align: center; }
+
+.budget-totals-label {
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+}
+
+.budget-totals-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.budget-totals-value.over { color: var(--error); }
+.budget-totals-value.ok { color: var(--success); }
+
+.section-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+}
+
+.unsaved-badge {
+    display: none;
+    font-size: 0.65rem;
+    color: var(--accent);
+    background: rgba(212,168,83,0.1);
+    border: 1px solid rgba(212,168,83,0.25);
+    border-radius: 999px;
+    padding: 0.15rem 0.5rem;
+    margin-left: 0.5rem;
+}
+
+.unsaved-badge.visible { display: inline; }

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="finances.json">
+    <title>My Finances — Budget</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-header-row">
+                <div>
+                    <div class="accent-line"></div>
+                    <h1>Budget</h1>
+                    <p>Income & spending plan</p>
+                </div>
+                <div class="header-actions">
+                    <a href="settings.html" class="icon-btn" title="Settings">⚙️</a>
+                    <button class="icon-btn" id="signOutBtn" title="Sign out">🚪</button>
+                </div>
+            </div>
+            <span class="user-badge" id="userBadge">…</span>
+            <span class="version">v1.1.1</span>
+        </div>
+
+        <!-- Month navigator -->
+        <div class="month-nav">
+            <button class="month-nav-btn" id="prevMonth">‹</button>
+            <div style="text-align:center;flex:1">
+                <div class="month-nav-label" id="monthLabel">—</div>
+            </div>
+            <button class="month-nav-btn" id="nextMonth">›</button>
+        </div>
+
+        <!-- ── Income ── -->
+        <div class="section-title">Income</div>
+
+        <div class="income-grid">
+            <div class="income-card">
+                <div class="income-card-name">
+                    Luis
+                    <div class="income-updated-dot" id="luisDot" title="Updated this month"></div>
+                </div>
+                <div class="income-input-row">
+                    <span class="income-currency">€</span>
+                    <input type="number" class="income-input" id="incomeLuis"
+                           placeholder="0" min="0" step="0.01" inputmode="decimal" />
+                </div>
+            </div>
+            <div class="income-card">
+                <div class="income-card-name">
+                    Sara
+                    <div class="income-updated-dot" id="saraDot" title="Updated this month"></div>
+                </div>
+                <div class="income-input-row">
+                    <span class="income-currency">€</span>
+                    <input type="number" class="income-input" id="incomeSara"
+                           placeholder="0" min="0" step="0.01" inputmode="decimal" />
+                </div>
+            </div>
+        </div>
+
+        <div class="income-summary">
+            <div class="income-summary-item">
+                <div class="income-summary-label">Total Income</div>
+                <div class="income-summary-value neutral" id="summaryIncome">€0</div>
+            </div>
+            <div class="income-summary-divider"></div>
+            <div class="income-summary-item">
+                <div class="income-summary-label">Budgeted</div>
+                <div class="income-summary-value neutral" id="summaryBudgeted">€0</div>
+            </div>
+            <div class="income-summary-divider"></div>
+            <div class="income-summary-item">
+                <div class="income-summary-label">Remaining</div>
+                <div class="income-summary-value neutral" id="summaryRemaining">€0</div>
+            </div>
+        </div>
+
+        <button class="btn-submit" id="saveIncomeBtn" style="margin-bottom:1.5rem">
+            Save Income
+        </button>
+
+        <div class="divider"></div>
+
+        <!-- ── Budget ── -->
+        <div class="section-title" style="margin-top:1.25rem">
+            Category Budgets
+            <span class="unsaved-badge" id="unsavedBadge">unsaved changes</span>
+        </div>
+
+        <div id="budgetList">
+            <div class="loading-state">
+                <span class="spinner" style="border-top-color:var(--accent)"></span>
+                Loading…
+            </div>
+        </div>
+
+        <div class="budget-totals" id="budgetTotals" style="display:none">
+            <div class="budget-totals-item">
+                <div class="budget-totals-label">Total Budget</div>
+                <div class="budget-totals-value" id="totalBudget">€0</div>
+            </div>
+            <div class="budget-totals-item">
+                <div class="budget-totals-label">Total Spent</div>
+                <div class="budget-totals-value" id="totalSpent">€0</div>
+            </div>
+            <div class="budget-totals-item">
+                <div class="budget-totals-label">Remaining</div>
+                <div class="budget-totals-value" id="totalRemaining">€0</div>
+            </div>
+        </div>
+
+        <button class="btn-submit save-budget-btn" id="saveBudgetBtn">
+            Save Budget
+        </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">＋</span>
+            <span>Add</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <span class="nav-icon">☰</span>
+            <span>Expenses</span>
+        </a>
+        <a href="budget.html" class="nav-item active">
+            <span class="nav-icon">◉</span>
+            <span>Budget</span>
+        </a>
+        <a href="investments.html" class="nav-item">
+            <span class="nav-icon">↗</span>
+            <span>Investments</span>
+        </a>
+        <a href="dashboards.html" class="nav-item">
+            <span class="nav-icon">◎</span>
+            <span>Dashboard</span>
+        </a>
+    </nav>
+
+    <script type="module" src="budget.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(console.warn);
+        }
+    </script>
+</body>
+</html>
