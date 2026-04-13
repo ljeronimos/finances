@@ -192,7 +192,7 @@ async function loadSpent() {
 
 function renderBudgetRow(cat){
     const sliderMax = totalIncome > 0 ? totalIncome : 5000;
-    
+
     const budget = budgetValues[cat] || 0;
     const spent = spentValues[cat] || 0;
     const pct = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
@@ -237,6 +237,8 @@ function renderBudgetRow(cat){
 function renderBudgetList() {
     const list = document.getElementById('budgetList');
 
+    console.log("Rendering budget list");
+    console.log("Categories: ", CATEGORIES ? Object.keys(CATEGORIES) : "No categories");
     // Use categories from localStorage, fall back to keys from existing budget
     const cats = CATEGORIES.length
         ? Object.keys(CATEGORIES)
@@ -257,6 +259,9 @@ function renderBudgetList() {
         const c = CATEGORIES[cat];
         return c && !(c.luis_share === 0.5 && c.sara_share === 0.5);
     });
+
+    console.log("sharedEqually:",sharedEqually);
+    console.log("splitUnequally:",splitUnequally);
 
     const renderGroup = (groupCats) => groupCats.map(cat => renderBudgetRow(cat)).join('');
 
