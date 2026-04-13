@@ -20,9 +20,12 @@ const CATEGORIES = JSON.parse(localStorage.getItem('categories') || '{}');
     const { valid, session } = await checkSession();
     if (!valid) { window.location.replace('/login.html'); return; }
 
-    const displayName = session.user?.user_metadata?.display_name
-        || localStorage.getItem('display_name')
+    const displayName = JSON.parse(localStorage.getItem('user_preferences')).display_name
         || session.user?.email;
+
+    /*const displayName = session.user?.user_metadata?.display_name
+        || localStorage.getItem('display_name')
+        || session.user?.email;*/
     document.getElementById('userBadge').textContent = displayName;
 
     renderMonthLabel();
@@ -269,44 +272,6 @@ function renderBudgetList() {
             </div>
             ${renderGroup(sharedEqually)}
         ` : '');
-
-
-
-    /*list.innerHTML = cats.map(cat => {
-        const budget = budgetValues[cat] || 0;
-        const spent = spentValues[cat] || 0;
-        const pct = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
-        const over = spent > budget && budget > 0;
-        const barColor = over ? 'var(--error)' : pct > 80 ? '#e8a838' : 'var(--success)';
-
-        return `
-        <div class="budget-row" data-category="${escapeAttr(cat)}">
-            <div class="budget-row-header">
-                <div class="budget-category-name">${escapeHtml(cat)}</div>
-                <div class="budget-amounts">
-                    <span class="${over ? 'over' : 'spent'}">€${spent.toFixed(2)}</span>
-                    <span style="color:var(--border)"> / </span>
-                    <span>€<span class="budget-display">${budget.toFixed(2)}</span></span>
-                </div>
-            </div>
-            <div class="budget-progress-track">
-                <div class="budget-progress-fill"
-                     style="width:${pct}%;background:${barColor}"></div>
-            </div>
-            <div class="budget-input-row">
-                <input type="range" class="budget-slider"
-                    style="flex:1"
-                    min="0" max="${sliderMax}" step="10"
-                    value="${budget}"
-                    data-cat="${escapeAttr(cat)}" />
-                <input type="number" class="budget-text-input"
-                    style="width:60px;flex:none"
-                    min="0" step="0.01" value="${budget || ''}"
-                    placeholder="0"
-                    data-cat="${escapeAttr(cat)}" inputmode="decimal" />
-            </div>
-        </div>`;
-    }).join('');*/
 
     // Wire up slider ↔ text field sync
     list.querySelectorAll('.budget-slider').forEach(slider => {

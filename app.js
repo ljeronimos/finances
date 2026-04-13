@@ -17,9 +17,14 @@ import {
         return;
     }
 
+    if(!offline){
+        loadPreferences();
+    }
+
+    console.log("user_preferences:",JSON.parse(localStorage.getItem('user_preferences')));
+
     // Show user badge
-    const displayName = session.user?.user_metadata?.display_name
-        || localStorage.getItem('display_name')
+    const displayName = JSON.parse(localStorage.getItem('user_preferences')).display_name
         || session.user?.email;
     
     const badge = document.getElementById('userBadge');
@@ -72,17 +77,14 @@ async function loadCategories() {
 
     // Load from cache first so the select is never empty
     const cached = localStorage.getItem('categories');
-    console.log("Cached categories:",cached ? Object.keys(JSON.parse(cached)) : "No cache");
 
     populateCategories(cached ? Object.keys(JSON.parse(cached)) : DEFAULT_CATEGORIES);
 
     // Fetch live from Pages Function in background
     try {
-        console.log("Fetching categories...");
         const res = await fetch('/api/categories', { headers: getAuthHeaders() });
         if (res.ok) {
             const data = await res.json();
-            console.log("Data fetched - data:",data);
 
             const categoryMap = {};
             data.forEach(r => {
@@ -91,7 +93,6 @@ async function loadCategories() {
                     sara_share: r.sara_share,
                 };
             });
-            console.log("categoryMap:",categoryMap);
             localStorage.setItem('categories', JSON.stringify(categoryMap));
 
             //const categories = data.map(r => r.category);
@@ -105,7 +106,6 @@ async function loadCategories() {
 }
 
 function populateCategories(categories) {
-    console.log("Populate categories:",categories);
     const select = document.getElementById('category');
     if (!select) return;
     select.innerHTML = '<option value="" disabled selected>Select a category</option>';
@@ -272,3 +272,22 @@ function resetSubmitBtn(btn) {
     btn.classList.add("active");
   });
 });*/
+
+async function loadPreferences(){
+
+    console.log("Loading user preferences...");
+    
+    try {
+        const res = await fetch('/api/preferences', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Unknown error');
+
+        localStorage.setItem('user_preferences', JSON.stringify(data));
+        
+    } catch (err) {
+        console.error("Could not fetch user preferences - "+err);
+    }
+}

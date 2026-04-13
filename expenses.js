@@ -6,9 +6,12 @@ import { checkSession, clearSession, showToast, getAuthHeaders } from './auth.js
     const { valid, session, offline } = await checkSession();
     if (!valid) { window.location.replace('/login.html'); return; }
 
-    const displayName = session.user?.user_metadata?.display_name
-        || localStorage.getItem('display_name')
+    const displayName = JSON.parse(localStorage.getItem('user_preferences')).display_name
         || session.user?.email;
+
+    /*const displayName = session.user?.user_metadata?.display_name
+        || localStorage.getItem('display_name')
+        || session.user?.email;*/
     document.getElementById('userBadge').textContent = displayName;
 
     const banner = document.getElementById('offlineBanner');
