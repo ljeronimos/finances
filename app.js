@@ -78,9 +78,11 @@ async function loadCategories() {
 
     // Fetch live from Pages Function in background
     try {
+        console.log("Fetching categories...");
         const res = await fetch('/api/categories', { headers: getAuthHeaders() });
         if (res.ok) {
             const data = await res.json();
+            console.log("Data fetched - data:",data);
 
             const categoryMap = {};
             data.forEach(r => {
@@ -89,11 +91,13 @@ async function loadCategories() {
                     sara_share: r.sara_share,
                 };
             });
+            console.log("categoryMap:",categoryMap);
             localStorage.setItem('categories', JSON.stringify(categoryMap));
 
             //const categories = data.map(r => r.category);
             //localStorage.setItem('categories', JSON.stringify(categories));
-            populateCategories(JSON.stringify(data.map(r => r.category)));
+            //populateCategories(JSON.stringify(data.map(r => r.category)));
+            populateCategories(data.map(r => r.category));
         }
     } catch {
         if (!cached) status.textContent = 'Using default categories — open online to refresh.';
