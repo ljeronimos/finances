@@ -72,7 +72,7 @@ async function loadCategories() {
 
     // Load from cache first so the select is never empty
     const cached = localStorage.getItem('categories');
-    console.log("Cached categories:",Object.keys(JSON.parse(cached)));
+    console.log("Cached categories:",cached ? Object.keys(JSON.parse(cached)) : "No cache");
 
     populateCategories(cached ? Object.keys(JSON.parse(cached)) : DEFAULT_CATEGORIES);
 
