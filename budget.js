@@ -246,6 +246,9 @@ function renderBudgetList() {
 
     console.log("cats:",cats);
 
+    console.log("Object.keys({ ...budgetValues, ...spentValues }):",Object.keys({ ...budgetValues, ...spentValues }));
+    console.log("Object.keys(CATEGORIES):",Object.keys(CATEGORIES));
+
     if (!cats.length) {
         list.innerHTML = '<div class="empty-state"><div class="empty-icon">📂</div>No categories found. Add an expense first to populate categories.</div>';
         return;
