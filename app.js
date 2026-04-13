@@ -276,7 +276,7 @@ function resetSubmitBtn(btn) {
 async function loadPreferences(){
 
     console.log("Loading user preferences...");
-    
+
     try {
         const res = await fetch('/api/preferences', {
             method: 'GET',
@@ -284,6 +284,8 @@ async function loadPreferences(){
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Unknown error');
+
+        console.log("fetched data:",data);
 
         localStorage.setItem('user_preferences', JSON.stringify(data));
         
