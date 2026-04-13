@@ -225,7 +225,7 @@ function renderBudgetRow(cat){
                 value="${budget}"
                 data-cat="${escapeAttr(cat)}" />
             <input type="number" class="budget-text-input"
-                style="width:60px;flex:none"
+                style="width:75px;flex:none"
                 min="0" step="0.01" value="${budget || ''}"
                 placeholder="0"
                 data-cat="${escapeAttr(cat)}" inputmode="decimal" />
@@ -237,41 +237,27 @@ function renderBudgetRow(cat){
 function renderBudgetList() {
     const list = document.getElementById('budgetList');
 
-    console.log("Rendering budget list");
-    console.log("Categories: ", CATEGORIES ? Object.keys(CATEGORIES) : "No categories");
     // Use categories from localStorage, fall back to keys from existing budget
     /*const cats = CATEGORIES.length
         ? Object.keys(CATEGORIES)
         : Object.keys({ ...budgetValues, ...spentValues });*/
     const cats = Object.keys(CATEGORIES)
 
-    console.log("cats:",cats);
-
-    console.log("Object.keys({ ...budgetValues, ...spentValues }):",Object.keys({ ...budgetValues, ...spentValues }));
-    console.log("Object.keys(CATEGORIES):",Object.keys(CATEGORIES));
-
     if (!cats.length) {
         list.innerHTML = '<div class="empty-state"><div class="empty-icon">📂</div>No categories found. Add an expense first to populate categories.</div>';
         return;
     }
 
-    console.log("sharedEqually");
     // Split categories into two groups
     const sharedEqually = cats.filter(cat => {
         const c = CATEGORIES[cat];
-        console.log("c:",c);
         return !c || (c.luis_share === 0.5 && c.sara_share === 0.5);
     });
 
-    console.log("splitUnequally");
     const splitUnequally = cats.filter(cat => {
         const c = CATEGORIES[cat];
-        console.log("c:",c);
         return c && !(c.luis_share === 0.5 && c.sara_share === 0.5);
     });
-
-    console.log("sharedEqually:",sharedEqually);
-    console.log("splitUnequally:",splitUnequally);
 
     const renderGroup = (groupCats) => groupCats.map(cat => renderBudgetRow(cat)).join('');
 
