@@ -73,7 +73,7 @@ function getDateRange(period) {
 
 function loadCategories() {
     const cached = localStorage.getItem('categories');
-    const cats = cached ? JSON.parse(cached) : [];
+    const cats = cached ? Object.keys(JSON.parse(cached)) : [];
     const select = document.getElementById('filterCategory');
     cats.forEach(c => {
         const opt = document.createElement('option');

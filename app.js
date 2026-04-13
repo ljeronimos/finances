@@ -72,16 +72,27 @@ async function loadCategories() {
 
     // Load from cache first so the select is never empty
     const cached = localStorage.getItem('categories');
-    populateCategories(cached ? JSON.parse(cached) : DEFAULT_CATEGORIES);
+
+    populateCategories(cached ? Object.keys(JSON.parse(cached)) : DEFAULT_CATEGORIES);
 
     // Fetch live from Pages Function in background
     try {
         const res = await fetch('/api/categories', { headers: getAuthHeaders() });
         if (res.ok) {
             const data = await res.json();
-            const categories = data.map(r => r.category);
-            localStorage.setItem('categories', JSON.stringify(categories));
-            populateCategories(categories);
+
+            const categoryMap = {};
+            data.forEach(r => {
+                categoryMap[r.category] = {
+                    luis_share: r.luis_share,
+                    sara_share: r.sara_share,
+                };
+            });
+            localStorage.setItem('categories', JSON.stringify(categoryMap));
+
+            //const categories = data.map(r => r.category);
+            //localStorage.setItem('categories', JSON.stringify(categories));
+            populateCategories(JSON.stringify(data.map(r => r.category)));
         }
     } catch {
         if (!cached) status.textContent = 'Using default categories — open online to refresh.';

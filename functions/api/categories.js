@@ -4,7 +4,8 @@ export async function onRequestGet(context) {
     const CATEGORY_TABLE = 'categories';
 
     const res = await fetch(
-        `${env.SUPABASE_URL}/rest/v1/${CATEGORY_TABLE}?select=category&order=category`,
+        //`${env.SUPABASE_URL}/rest/v1/${CATEGORY_TABLE}?select=category&order=category`,
+        `${env.SUPABASE_URL}/rest/v1/${CATEGORY_TABLE}?select=category,luis_share,sara_share&order=category`,
         {
             headers: {
                 'apikey': env.SUPABASE_SERVICE_KEY,

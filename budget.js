@@ -11,7 +11,8 @@ let budgetValues = {};   // { category: amount }
 let spentValues = {};    // { category: amount } — from expenses API
 let hasUnsavedBudget = false;
 
-const CATEGORIES = JSON.parse(localStorage.getItem('categories') || '[]');
+//const CATEGORIES = Object.keys(JSON.parse(localStorage.getItem('categories'))) || [];
+const CATEGORIES = JSON.parse(localStorage.getItem('categories') || '{}');
 
 // ── Session check ─────────────────────────────────────────────────────────────
 
@@ -189,13 +190,55 @@ async function loadSpent() {
 
 // ── Render budget list ────────────────────────────────────────────────────────
 
+function renderBudgetRow(cat){
+    const budget = budgetValues[cat] || 0;
+    const spent = spentValues[cat] || 0;
+    const pct = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
+    const over = spent > budget && budget > 0;
+    const barColor = over ? 'var(--error)' : pct > 80 ? '#e8a838' : 'var(--success)';
+
+    const config = CATEGORIES[cat];
+    const ratioLabel = config && config.luis_share !== 0.5
+        ? `<span class="share-label">L${Math.round(config.luis_share*100)}·S${Math.round(config.sara_share*100)}</span>`
+        : '';
+
+    return `
+    <div class="budget-row" data-category="${escapeAttr(cat)}">
+        <div class="budget-row-header">
+            <div class="budget-category-name">${escapeHtml(cat)}${ratioLabel}</div>
+            <div class="budget-amounts">
+                <span class="${over ? 'over' : 'spent'}">€${spent.toFixed(2)}</span>
+                <span style="color:var(--border)"> / </span>
+                <span>€<span class="budget-display">${budget.toFixed(2)}</span></span>
+            </div>
+        </div>
+        <div class="budget-progress-track">
+            <div class="budget-progress-fill"
+                    style="width:${pct}%;background:${barColor}"></div>
+        </div>
+        <div class="budget-input-row">
+            <input type="range" class="budget-slider"
+                style="flex:1"
+                min="0" max="${sliderMax}" step="10"
+                value="${budget}"
+                data-cat="${escapeAttr(cat)}" />
+            <input type="number" class="budget-text-input"
+                style="width:60px;flex:none"
+                min="0" step="0.01" value="${budget || ''}"
+                placeholder="0"
+                data-cat="${escapeAttr(cat)}" inputmode="decimal" />
+        </div>
+    </div>`;
+}
+
+
 function renderBudgetList() {
     const list = document.getElementById('budgetList');
     const sliderMax = totalIncome > 0 ? totalIncome : 5000;
 
     // Use categories from localStorage, fall back to keys from existing budget
     const cats = CATEGORIES.length
-        ? CATEGORIES
+        ? Object.keys(CATEGORIES)
         : Object.keys({ ...budgetValues, ...spentValues });
 
     if (!cats.length) {
@@ -203,7 +246,31 @@ function renderBudgetList() {
         return;
     }
 
-    list.innerHTML = cats.map(cat => {
+    // Split categories into two groups
+    const sharedEqually = cats.filter(cat => {
+        const c = CATEGORIES[cat];
+        return !c || (c.luis_share === 0.5 && c.sara_share === 0.5);
+    });
+
+    const splitUnequally = cats.filter(cat => {
+        const c = CATEGORIES[cat];
+        return c && !(c.luis_share === 0.5 && c.sara_share === 0.5);
+    });
+
+    const renderGroup = (groupCats) => groupCats.map(cat => renderBudgetRow(cat)).join('');
+
+    list.innerHTML =
+        renderGroup(sharedEqually) +
+        (splitUnequally.length ? `
+            <div class="budget-group-divider">
+                <span>Split expenses</span>
+            </div>
+            ${renderGroup(splitUnequally)}
+        ` : '');
+
+
+
+    /*list.innerHTML = cats.map(cat => {
         const budget = budgetValues[cat] || 0;
         const spent = spentValues[cat] || 0;
         const pct = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
@@ -226,16 +293,18 @@ function renderBudgetList() {
             </div>
             <div class="budget-input-row">
                 <input type="range" class="budget-slider"
-                       min="0" max="${sliderMax}" step="10"
-                       value="${budget}"
-                       data-cat="${escapeAttr(cat)}" />
+                    style="flex:1"
+                    min="0" max="${sliderMax}" step="10"
+                    value="${budget}"
+                    data-cat="${escapeAttr(cat)}" />
                 <input type="number" class="budget-text-input"
-                       min="0" step="0.01" value="${budget || ''}"
-                       placeholder="0"
-                       data-cat="${escapeAttr(cat)}" inputmode="decimal" />
+                    style="width:60px;flex:none"
+                    min="0" step="0.01" value="${budget || ''}"
+                    placeholder="0"
+                    data-cat="${escapeAttr(cat)}" inputmode="decimal" />
             </div>
         </div>`;
-    }).join('');
+    }).join('');*/
 
     // Wire up slider ↔ text field sync
     list.querySelectorAll('.budget-slider').forEach(slider => {

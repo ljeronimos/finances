@@ -978,7 +978,7 @@ input[type="email"]:focus, input[type="password"]:focus {
 }
 
 .budget-text-input {
-    width: 80px;
+    width: 60px;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -990,6 +990,8 @@ input[type="email"]:focus, input[type="password"]:focus {
     text-align: right;
     min-height: auto;
     transition: border-color 0.2s;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 .budget-text-input:focus { border-color: var(--accent); }
@@ -1051,3 +1053,33 @@ input[type="email"]:focus, input[type="password"]:focus {
 }
 
 .unsaved-badge.visible { display: inline; }
+
+.budget-group-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1rem 0 0.25rem;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.budget-group-divider::before,
+.budget-group-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.share-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.1rem 0.35rem;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+}
