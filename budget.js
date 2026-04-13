@@ -191,6 +191,8 @@ async function loadSpent() {
 // ── Render budget list ────────────────────────────────────────────────────────
 
 function renderBudgetRow(cat){
+    const sliderMax = totalIncome > 0 ? totalIncome : 5000;
+    
     const budget = budgetValues[cat] || 0;
     const spent = spentValues[cat] || 0;
     const pct = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
@@ -234,7 +236,6 @@ function renderBudgetRow(cat){
 
 function renderBudgetList() {
     const list = document.getElementById('budgetList');
-    const sliderMax = totalIncome > 0 ? totalIncome : 5000;
 
     // Use categories from localStorage, fall back to keys from existing budget
     const cats = CATEGORIES.length

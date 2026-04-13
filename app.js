@@ -72,6 +72,7 @@ async function loadCategories() {
 
     // Load from cache first so the select is never empty
     const cached = localStorage.getItem('categories');
+    console.log("Cached categories:",Object.keys(JSON.parse(cached)));
 
     populateCategories(cached ? Object.keys(JSON.parse(cached)) : DEFAULT_CATEGORIES);
 
@@ -100,6 +101,7 @@ async function loadCategories() {
 }
 
 function populateCategories(categories) {
+    console.log("Populate categories:",categories);
     const select = document.getElementById('category');
     if (!select) return;
     select.innerHTML = '<option value="" disabled selected>Select a category</option>';
