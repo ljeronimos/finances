@@ -978,7 +978,7 @@ input[type="email"]:focus, input[type="password"]:focus {
 }
 
 .budget-text-input {
-    width: 60px;
+    width: 75px;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);

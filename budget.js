@@ -276,12 +276,12 @@ function renderBudgetList() {
     const renderGroup = (groupCats) => groupCats.map(cat => renderBudgetRow(cat)).join('');
 
     list.innerHTML =
-        renderGroup(sharedEqually) +
-        (splitUnequally.length ? `
+        renderGroup(splitUnequally) +
+        (sharedEqually.length ? `
             <div class="budget-group-divider">
                 <span>Split expenses</span>
             </div>
-            ${renderGroup(splitUnequally)}
+            ${renderGroup(sharedEqually)}
         ` : '');
 
 
