@@ -244,19 +244,25 @@ function renderBudgetList() {
         ? Object.keys(CATEGORIES)
         : Object.keys({ ...budgetValues, ...spentValues });
 
+    console.log("cats:",cats);
+
     if (!cats.length) {
         list.innerHTML = '<div class="empty-state"><div class="empty-icon">📂</div>No categories found. Add an expense first to populate categories.</div>';
         return;
     }
 
+    console.log("sharedEqually");
     // Split categories into two groups
     const sharedEqually = cats.filter(cat => {
         const c = CATEGORIES[cat];
+        console.log("c:",c);
         return !c || (c.luis_share === 0.5 && c.sara_share === 0.5);
     });
 
+    console.log("splitUnequally");
     const splitUnequally = cats.filter(cat => {
         const c = CATEGORIES[cat];
+        console.log("c:",c);
         return c && !(c.luis_share === 0.5 && c.sara_share === 0.5);
     });
 
