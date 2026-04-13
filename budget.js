@@ -240,9 +240,10 @@ function renderBudgetList() {
     console.log("Rendering budget list");
     console.log("Categories: ", CATEGORIES ? Object.keys(CATEGORIES) : "No categories");
     // Use categories from localStorage, fall back to keys from existing budget
-    const cats = CATEGORIES.length
+    /*const cats = CATEGORIES.length
         ? Object.keys(CATEGORIES)
-        : Object.keys({ ...budgetValues, ...spentValues });
+        : Object.keys({ ...budgetValues, ...spentValues });*/
+    const cats = Object.keys(CATEGORIES)
 
     console.log("cats:",cats);
 
