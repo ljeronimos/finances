@@ -10,20 +10,15 @@ export async function onRequestGet(context) {
         'Authorization': `Bearer ${env.SUPABASE_SERVICE_KEY}`,
     };
 
-    console.log("Before fetch...");
-    console.log("User.id: ",user.id);
-
     const res = await fetch(
         `${env.SUPABASE_URL}/rest/v1/user_preferences?user_id=eq.${user.id}`,
         { headers }
     );
     const data = await res.json();
 
-    console.log("data fetched: ",data);
+    if (data.length) return Response.json(data[0]);
 
-    if (data.length) return Response.json(data);
-
-    return Response.json([]);
+    return Response.json({});
 }
 
 export async function onRequestPatch(context) {
