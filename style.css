@@ -417,6 +417,14 @@ body {
     margin-bottom: 1rem;
 }
 
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.summary-item:last-child { text-align: right; }
+
 .expenses-summary .total-label {
     font-size: 0.7rem;
     text-transform: uppercase;
@@ -453,6 +461,17 @@ body {
 
 .expense-left { flex: 1; min-width: 0; }
 
+.expense-right {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.expense-personal {
+    font-size: 0.72rem;
+    color: var(--accent);
+    margin-top: 0.1rem;
+}
+
 .expense-desc {
     font-size: 0.875rem;
     color: var(--text);
@@ -478,6 +497,12 @@ body {
     padding: 0.1rem 0.4rem;
     font-size: 0.65rem;
     color: var(--accent);
+}
+
+.expense-tag--shared {
+    background: rgba(76,175,125,0.08);
+    border-color: rgba(76,175,125,0.25);
+    color: var(--success);
 }
 
 .expense-amount {

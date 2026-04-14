@@ -91,6 +91,7 @@ function loadCategories() {
 async function loadExpenses() {
     const list = document.getElementById('expenseList');
     const totalEl = document.getElementById('totalAmount');
+    const personalTotalEl = document.getElementById('personalTotal');
     const periodLabel = document.getElementById('periodLabel');
 
     const period = document.getElementById('filterPeriod').value;
@@ -109,6 +110,17 @@ async function loadExpenses() {
 
     list.innerHTML = '<div class="loading-state"><span class="spinner" style="border-top-color:var(--accent)"></span> Loading…</div>';
     totalEl.textContent = '—';
+    personalTotalEl.textContent = '—';
+
+    const prefs = JSON.parse(localStorage.getItem('user_preferences') || '{}');
+    const categories = JSON.parse(localStorage.getItem('categories') || '{}');
+    const shareColumn = prefs.share_column;
+
+    function getUserRatio(category, shared) {
+        if (shared === 'No') return 1;
+        if (!shareColumn || !categories[category]) return 0.5;
+        return categories[category][shareColumn] ?? 0.5;
+    }
 
     try {
         const res = await fetch(`/api/expenses?${params}`, { headers: getAuthHeaders() });
@@ -122,28 +134,39 @@ async function loadExpenses() {
                     No expenses found for this period.
                 </div>`;
             totalEl.textContent = '€0.00';
+            personalTotalEl.textContent = '€0.00';
             return;
         }
 
         const total = expenses.reduce((sum, e) => sum + e.amount, 0);
-        totalEl.textContent = `€${total.toFixed(2)}`;
+        const personalTotal = expenses.reduce((sum, e) => sum + Number(e.amount) * getUserRatio(e.category, e.shared), 0);
 
-        list.innerHTML = expenses.map(e => `
+        totalEl.textContent = `€${total.toFixed(2)}`;
+        personalTotalEl.textContent = `€${personalTotal.toFixed(2)}`;
+
+        list.innerHTML = expenses.map(e => {
+            const personalAmount = Number(e.amount) * getUserRatio(e.category, e.shared);
+            const showPersonal = personalAmount !== Number(e.amount);
+
+            return `
             <div class="expense-item">
                 <div class="expense-left">
                     <div class="expense-desc">${escapeHtml(e.description)}</div>
                     <div class="expense-meta">
                         <span>${formatDate(e.date)}</span>
                         <span class="expense-tag">${escapeHtml(e.category)}</span>
-                        ${e.shared === 'Yes' ? '<span class="expense-tag">Shared</span>' : ''}
+                        ${e.shared === 'Yes' ? '<span class="expense-tag expense-tag--shared">Shared</span>' : ''}
                     </div>
                 </div>
-                <div>
+                <div class="expense-right">
                     <div class="expense-amount">€${Number(e.amount).toFixed(2)}</div>
+                    ${showPersonal ?
+                        `<div class="expense-personal">€${personalAmount.toFixed(2)} yours</div>` :
+                        ''}
                     <div class="expense-paid-by">${escapeHtml(e.paid_by)}</div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
 
     } catch (err) {
         list.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div>${err.message}</div>`;
