@@ -238,7 +238,7 @@ document.getElementById('expenseForm').addEventListener('submit', async (e) => {
     try {
         const res = await fetch('/api/expenses', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify(payload),
         });
         const data = await res.json();
