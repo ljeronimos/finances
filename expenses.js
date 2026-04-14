@@ -108,6 +108,8 @@ async function loadExpenses() {
     if (category) params.set('category', category);
     if (paidBy) params.set('paid_by', paidBy);
 
+    console.log("expenses params: ",params);
+
     list.innerHTML = '<div class="loading-state"><span class="spinner" style="border-top-color:var(--accent)"></span> Loading…</div>';
     totalEl.textContent = '—';
     personalTotalEl.textContent = '—';

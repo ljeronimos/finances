@@ -45,12 +45,13 @@ export async function onRequestGet(context) {
     if (error) return unauthorized();
 
     // Get user's display name for visibility filtering
-    const prefRes = await fetch(
+    /*const prefRes = await fetch(
         `${env.SUPABASE_URL}/rest/v1/user_preferences?user_id=eq.${user.id}&select=display_name`,
         { headers: { 'apikey': env.SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${env.SUPABASE_SERVICE_KEY}` } }
     );
     const prefData = await prefRes.json();
-    const displayName = prefData[0]?.display_name;
+    const displayName = prefData[0]?.display_name;*/
+    const displayName = JSON.parse(localStorage.getItem('user_preferences')).display_name
 
     // Visibility: shared=Yes OR paid_by matches user's display name
     const visibilityFilter = displayName
