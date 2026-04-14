@@ -18,7 +18,7 @@ import {
     }
 
     if(!offline){
-        loadPreferences();
+        await loadPreferences();
     }
 
     console.log("user_preferences:",JSON.parse(localStorage.getItem('user_preferences')));
@@ -280,7 +280,7 @@ async function loadPreferences(){
     try {
         const res = await fetch('/api/preferences', {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+            headers: getAuthHeaders()
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Unknown error');
