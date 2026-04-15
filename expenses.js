@@ -35,35 +35,47 @@ function getDateRange(period) {
     const y = now.getFullYear();
     const m = now.getMonth();
 
+    console.log("On getDateRange - period:",period);
+
     switch (period) {
         case 'this_month':
             return {
-                from: new Date(y, m, 1).toISOString().split('T')[0],
-                to: new Date(y, m + 1, 0).toISOString().split('T')[0],
+                from: formatSupabaseDate(y, m, 1),
+                to: formatSupabaseDate(y, m, new Date(y, m + 1, 0).getDate()),
+                //from: new Date(y, m, 1).toISOString().split('T')[0],
+                //to: new Date(y, m + 1, 0).toISOString().split('T')[0],
                 label: now.toLocaleString('default', { month: 'long', year: 'numeric' }),
             };
         case 'last_month':
             return {
-                from: new Date(y, m - 1, 1).toISOString().split('T')[0],
-                to: new Date(y, m, 0).toISOString().split('T')[0],
+                from: formatSupabaseDate(y, m - 1, 1),
+                to: formatSupabaseDate(y, m - 1, new Date(y, m, 0).getDate()),
+                //from: new Date(y, m - 1, 1).toISOString().split('T')[0],
+                //to: new Date(y, m, 0).toISOString().split('T')[0],
                 label: new Date(y, m - 1).toLocaleString('default', { month: 'long', year: 'numeric' }),
             };
         case 'last_3_months':
             return {
-                from: new Date(y, m - 2, 1).toISOString().split('T')[0],
-                to: new Date(y, m + 1, 0).toISOString().split('T')[0],
+                from: formatSupabaseDate(y, m - 2, 1),
+                to: formatSupabaseDate(y, m, new Date(y, m + 1, 0).getDate()),
+                //from: new Date(y, m - 2, 1).toISOString().split('T')[0],
+                //to: new Date(y, m + 1, 0).toISOString().split('T')[0],
                 label: 'Last 3 months',
             };
         case 'last_6_months':
             return {
-                from: new Date(y, m - 5, 1).toISOString().split('T')[0],
-                to: new Date(y, m + 1, 0).toISOString().split('T')[0],
+                from: formatSupabaseDate(y, m - 5, 1),
+                to: formatSupabaseDate(y, m, new Date(y, m + 1, 0).getDate()),
+                //from: new Date(y, m - 5, 1).toISOString().split('T')[0],
+                //to: new Date(y, m + 1, 0).toISOString().split('T')[0],
                 label: 'Last 6 months',
             };
         case 'this_year':
             return {
-                from: new Date(y, 0, 1).toISOString().split('T')[0],
-                to: new Date(y, 11, 31).toISOString().split('T')[0],
+                from: formatSupabaseDate(y, 0, 1),
+                to: formatSupabaseDate(y, 11, 31),
+                //from: new Date(y, 0, 1).toISOString().split('T')[0],
+                //to: new Date(y, 11, 31).toISOString().split('T')[0],
                 label: `${y}`,
             };
         case 'all':
@@ -99,6 +111,7 @@ async function loadExpenses() {
     const paidBy = document.getElementById('filterPaidBy').value;
 
     const { from, to, label } = getDateRange(period);
+    console.log("from/to/label:",from,to,label);
     periodLabel.textContent = label;
 
     // Build query params
@@ -187,6 +200,10 @@ async function loadExpenses() {
 function formatDate(dateStr) {
     const [y, m, d] = dateStr.split('-');
     return `${d}/${m}/${y}`;
+}
+
+function formatSupabaseDate(y, m, d) {
+    return `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 }
 
 function escapeHtml(str) {

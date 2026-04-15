@@ -69,8 +69,16 @@ export async function onRequestGet(context) {
     const paidBy = url.searchParams.get('paid_by');
 
     const filters = [visibilityFilter];
-    if (from) filters.push(`date=gte.${from}`);
-    if (to) filters.push(`date=lte.${to}`);
+    //if (from) filters.push(`date=gte.${from}`);
+    //if (to) filters.push(`date=lte.${to}`);
+
+    if (from && to) {
+        filters.push(`and=(date.gte.${from},date.lte.${to})`);
+    } else if (from) {
+        filters.push(`date=gte.${from}`);
+    } else if (to) {
+        filters.push(`date=lte.${to}`);
+    }
     if (category) filters.push(`category=eq.${encodeURIComponent(category)}`);
     if (paidBy) filters.push(`paid_by=eq.${encodeURIComponent(paidBy)}`);
 
