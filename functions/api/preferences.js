@@ -6,11 +6,13 @@ export async function onRequestGet(context) {
     const { user, error } = await requireAuth(request, env);
     if (error) return unauthorized();
 
-    const data = getUserPreferences(env, user.id);
+    const data = await getUserPreferences(env, user.id);
 
-    if (data.length) return Response.json(data);
+    return Response.json(data);
 
-    return Response.json({});
+    //if (data.length) return Response.json(data[0]);
+
+    //return Response.json({});
 }
 
 export async function onRequestPatch(context) {
