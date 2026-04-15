@@ -31,57 +31,72 @@ document.getElementById('signOutBtn').addEventListener('click', () => {
 // ── Date range helpers ────────────────────────────────────────────────────────
 
 function getDateRange(period) {
+
+    console.log("On getDateRange - period:",period);
+
     const now = new Date();
     const y = now.getFullYear();
     const m = now.getMonth();
 
-    console.log("On getDateRange - period:",period);
+    let fromDate = new Date(y, m, 1);
+    let toDate = new Date(y, m + 1, 0);
+    let label = now.toLocaleString('default', { month: 'long', year: 'numeric' });
 
+    
     switch (period) {
         case 'this_month':
-            return {
-                from: formatSupabaseDate(y, m, 1),
-                to: formatSupabaseDate(y, m, new Date(y, m + 1, 0).getDate()),
+            //return {
                 //from: new Date(y, m, 1).toISOString().split('T')[0],
                 //to: new Date(y, m + 1, 0).toISOString().split('T')[0],
-                label: now.toLocaleString('default', { month: 'long', year: 'numeric' }),
-            };
+                //label: now.toLocaleString('default', { month: 'long', year: 'numeric' }),
+            //};
+            break;
         case 'last_month':
-            return {
-                from: formatSupabaseDate(y, m - 1, 1),
-                to: formatSupabaseDate(y, m - 1, new Date(y, m, 0).getDate()),
+            fromDate = new Date(y, m - 1, 1);
+            toDate = new Date(y, m, 0);
+            label = new Date(y, m - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+            break;
+            //return {
                 //from: new Date(y, m - 1, 1).toISOString().split('T')[0],
                 //to: new Date(y, m, 0).toISOString().split('T')[0],
-                label: new Date(y, m - 1).toLocaleString('default', { month: 'long', year: 'numeric' }),
-            };
+                //label: new Date(y, m - 1).toLocaleString('default', { month: 'long', year: 'numeric' }),
+            //};
         case 'last_3_months':
-            return {
-                from: formatSupabaseDate(y, m - 2, 1),
-                to: formatSupabaseDate(y, m, new Date(y, m + 1, 0).getDate()),
+            fromDate = new Date(y, m - 2, 1);
+            toDate = new Date(y, m + 1, 0);
+            label = 'Last 3 months';
+            break;
+            //return {
                 //from: new Date(y, m - 2, 1).toISOString().split('T')[0],
                 //to: new Date(y, m + 1, 0).toISOString().split('T')[0],
-                label: 'Last 3 months',
-            };
+                //label: 'Last 3 months',
+            //};
         case 'last_6_months':
-            return {
-                from: formatSupabaseDate(y, m - 5, 1),
-                to: formatSupabaseDate(y, m, new Date(y, m + 1, 0).getDate()),
-                //from: new Date(y, m - 5, 1).toISOString().split('T')[0],
-                //to: new Date(y, m + 1, 0).toISOString().split('T')[0],
-                label: 'Last 6 months',
-            };
+            fromDate = new Date(y, m - 5, 1);
+            toDate = new Date(y, m + 1, 0);
+            label = 'Last 6 months';
+            break;
         case 'this_year':
-            return {
-                from: formatSupabaseDate(y, 0, 1),
-                to: formatSupabaseDate(y, 11, 31),
+            fromDate = new Date(y, 0, 1);
+            toDate = new Date(y, 11, 31);
+            label = `${y}`;
+            break;
+            //return {
                 //from: new Date(y, 0, 1).toISOString().split('T')[0],
                 //to: new Date(y, 11, 31).toISOString().split('T')[0],
-                label: `${y}`,
-            };
+                //label: `${y}`,
+            //};
         case 'all':
         default:
             return { from: null, to: null, label: 'All time' };
     }
+
+
+    return {
+        from: formatSupabaseDate(fromDate),
+        to: formatSupabaseDate(toDate),
+        label: label
+    };
 }
 
 // ── Load categories for filter ────────────────────────────────────────────────
@@ -202,8 +217,12 @@ function formatDate(dateStr) {
     return `${d}/${m}/${y}`;
 }
 
-function formatSupabaseDate(y, m, d) {
-    return `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+//function formatSupabaseDate(y, m, d) {
+//    return `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+//}
+
+function formatSupabaseDate(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
 function escapeHtml(str) {
