@@ -1,4 +1,5 @@
 import { requireAuth, unauthorized } from './_auth.js';
+import { getUserPreferences } from './_services/preferences.js';
 
 const TABLE = 'expenses';
 
@@ -51,7 +52,9 @@ export async function onRequestGet(context) {
     );
     const prefData = await prefRes.json();
     const displayName = prefData[0]?.display_name;*/
-    const displayName = JSON.parse(localStorage.getItem('user_preferences')).display_name
+    const prefs = await getUserPreferences(env, user.id);
+    const displayName = prefs?.display_name ?? null;
+    //const displayName = JSON.parse(localStorage.getItem('user_preferences')).display_name
 
     // Visibility: shared=Yes OR paid_by matches user's display name
     const visibilityFilter = displayName

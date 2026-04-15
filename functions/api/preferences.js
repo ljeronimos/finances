@@ -1,22 +1,14 @@
 import { requireAuth, unauthorized } from './_auth.js';
+import { getUserPreferences } from './_services/preferences.js';
 
 export async function onRequestGet(context) {
     const { request, env } = context;
     const { user, error } = await requireAuth(request, env);
     if (error) return unauthorized();
 
-    const headers = {
-        'apikey': env.SUPABASE_SERVICE_KEY,
-        'Authorization': `Bearer ${env.SUPABASE_SERVICE_KEY}`,
-    };
+    const data = getUserPreferences(env, user.id);
 
-    const res = await fetch(
-        `${env.SUPABASE_URL}/rest/v1/user_preferences?user_id=eq.${user.id}`,
-        { headers }
-    );
-    const data = await res.json();
-
-    if (data.length) return Response.json(data[0]);
+    if (data.length) return Response.json(data);
 
     return Response.json({});
 }
