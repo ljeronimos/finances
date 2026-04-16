@@ -76,6 +76,13 @@ async function loadAll() {
 
 // ── Income ────────────────────────────────────────────────────────────────────
 
+const incomeGrid = document.getElementById('income-grid');
+
+incomeGrid.addEventListener('click', e => {
+    if (e.target.classList.contains('editable')) {
+        makeEditable(e.target);
+    }
+});
 
 function makeEditable(span) {
 
@@ -97,7 +104,7 @@ function makeEditable(span) {
     input.select();
 
     const save = () => {
-        console.log("Saving update");
+        console.log("Saving income");
         if (saved) return;
         
         saved = true;
@@ -107,8 +114,7 @@ function makeEditable(span) {
         span.textContent = formatIncome(newValue);
         input.replaceWith(span);
 
-        // TODO: save to backend here
-        updateIncome(newValue, span.dataset.name);
+        upsertIncome(newValue, span.dataset.name);
     };
 
     const cancel = () => {
@@ -134,7 +140,7 @@ function formatIncome(v){
     return '';
 }
 
-function toggleIncomeGrid(element, luisIncome, saraIncome){
+/* function toggleIncomeGrid(element, luisIncome, saraIncome){
 
     const incomeGrid = document.getElementById('income-grid');
     const saveIncomeDiv = document.getElementById('saveIncomeDiv');
@@ -169,7 +175,7 @@ function toggleIncomeGrid(element, luisIncome, saraIncome){
             span.addEventListener('click', () => {
                 makeEditable(span);
             });
-        }); */
+        }); 
 
         incomeGrid.addEventListener('click', e => {
             if (e.target.classList.contains('editable')) {
@@ -213,7 +219,7 @@ function toggleIncomeGrid(element, luisIncome, saraIncome){
 
         document.getElementById('saveIncomeBtn').addEventListener('click', saveNewIncome);
     }
-}
+} */
 
 async function loadIncome() {
 
@@ -232,25 +238,33 @@ async function loadIncome() {
         console.log("loadIncome - data:",data);
 
         if(data.length){
-            //There is data - show income as text
+            //There is data
 
             const luisEntry = data.find(r => r.user_name === 'Luis');
             const saraEntry = data.find(r => r.user_name === 'Sara');
 
-            toggleIncomeGrid(
+            const incomeLuisElem = document.getElementById('incomeLuis');
+            const incomeSaraElem = document.getElementById('incomeSara');
+
+            incomeLuisElem.textContent = formatIncome(luisEntry?.amount) ?? '';
+            incomeSaraElem.textContent = formatIncome(saraEntry?.amount) ?? '';
+
+            /* toggleIncomeGrid(
                 'display',
                 formatIncome(luisEntry?.amount) ?? '',
-                formatIncome(saraEntry?.amount) ?? '');
+                formatIncome(saraEntry?.amount) ?? ''); */
 
-            console.log("displaying incomes");
+            console.log("displaying incomes - with data");
 
         }else{
-            //There is no data - show income input box
+            //There is no data
 
-            toggleIncomeGrid('input', null, null);
+            /* toggleIncomeGrid('input', null, null); */
 
-            console.log("displaying inputs for incomes");
+            console.log("displaying incomes - with no data");
         }
+
+        
 
         // Green dot — show if income was entered for this specific month
         /* document.getElementById('luisDot').classList.toggle('visible', !!luisEntry);
@@ -276,7 +290,7 @@ function recalcIncome() {
 //document.getElementById('incomeLuis').addEventListener('input', recalcIncome);
 //document.getElementById('incomeSara').addEventListener('input', recalcIncome);
 
-async function saveNewIncome(){
+/* async function saveNewIncome(){
 
     console.log("save button pressed. Saving new income");
 
@@ -313,11 +327,11 @@ async function saveNewIncome(){
         btn.disabled = false;
         btn.textContent = 'Save Income';
     }
-}
+} */
 
-async function updateIncome(newIncome, userName) {
+async function upsertIncome(incomeValue, userName) {
 
-    console.log("UpdateIncome");
+    console.log("upsertIncome");
 
     try {
         const res = await fetch('/api/budget/income', {
@@ -327,13 +341,13 @@ async function updateIncome(newIncome, userName) {
                 year: currentYear,
                 month: currentMonth,
                 entries: [
-                    { user_name: userName, amount: newIncome }
+                    { user_name: userName, amount: incomeValue }
                 ]
             })
         });
 
         if (!res.ok) throw new Error('Failed to update income');
-        showToast('Income updated');
+        showToast('Income upserted');
         //document.getElementById('luisDot').classList.toggle('visible', luis > 0);
         //document.getElementById('saraDot').classList.toggle('visible', sara > 0);
 
