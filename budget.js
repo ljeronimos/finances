@@ -227,6 +227,9 @@ async function loadIncome() {
 
     const isCurrentMonth = currentYear === now.getFullYear() && currentMonth === now.getMonth() + 1;
 
+    const incomeLuisElem = document.getElementById('incomeLuis');
+    const incomeSaraElem = document.getElementById('incomeSara');
+
     try {
         const res = await fetch(
             `/api/budget/income?year=${currentYear}&month=${currentMonth}`,
@@ -243,8 +246,6 @@ async function loadIncome() {
             const luisEntry = data.find(r => r.user_name === 'Luis');
             const saraEntry = data.find(r => r.user_name === 'Sara');
 
-            const incomeLuisElem = document.getElementById('incomeLuis');
-            const incomeSaraElem = document.getElementById('incomeSara');
 
             incomeLuisElem.textContent = formatIncome(luisEntry?.amount) ?? '';
             incomeSaraElem.textContent = formatIncome(saraEntry?.amount) ?? '';
@@ -260,6 +261,9 @@ async function loadIncome() {
             //There is no data
 
             /* toggleIncomeGrid('input', null, null); */
+
+            incomeLuisElem.textContent = formatIncome(0);
+            incomeSaraElem.textContent = formatIncome(0);
 
             console.log("displaying incomes - with no data");
         }
