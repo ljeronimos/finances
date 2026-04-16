@@ -11,7 +11,6 @@ let budgetValues = {};   // { category: amount }
 let spentValues = {};    // { category: amount } — from expenses API
 let hasUnsavedBudget = false;
 
-//const CATEGORIES = Object.keys(JSON.parse(localStorage.getItem('categories'))) || [];
 const CATEGORIES = JSON.parse(localStorage.getItem('categories') || '{}');
 
 // ── Session check ─────────────────────────────────────────────────────────────
@@ -79,7 +78,7 @@ async function loadAll() {
 const incomeGrid = document.getElementById('income-grid');
 
 incomeGrid.addEventListener('click', e => {
-    if (e.target.classList.contains('editable')) {
+    if (e.target.classList.contains('editable-income')) {
         makeEditable(e.target);
     }
 });
@@ -87,6 +86,8 @@ incomeGrid.addEventListener('click', e => {
 function makeEditable(span) {
 
     console.log("Displayed income pressed. Making editable...");
+
+    const type = span.dataset.type;
 
     const oldValue = span.textContent.replace(',', '.');
     const input = document.createElement('input');
@@ -96,8 +97,11 @@ function makeEditable(span) {
     input.type = 'number';
     input.step = '0.01';
     input.min = '0';
-    input.value = oldValue;
-    input.className = 'income-value-input';
+    input.value = oldValue ?? '';
+
+    input.className = type === 'income' ? 'income-value-input' : 'budget-value-input'
+    //input.className = 'income-value-input';
+    //input.className = 'value-input';
 
     span.replaceWith(input);
     input.focus();
@@ -106,7 +110,6 @@ function makeEditable(span) {
     const save = () => {
         console.log("Saving income");
         if (saved) return;
-        
         saved = true;
 
         const newValue = parseFloat(input.value || 0).toFixed(2);
@@ -114,7 +117,14 @@ function makeEditable(span) {
         span.textContent = formatIncome(newValue);
         input.replaceWith(span);
 
-        upsertIncome(newValue, span.dataset.name);
+        if (type === 'income') {
+            upsertIncome(newValue, span.dataset.name);
+        } else if (type === 'budget') {
+            upsertBudget();
+            updateBudget(span.dataset.category, newValue);
+        }
+
+        
     };
 
     const cancel = () => {
@@ -168,15 +178,11 @@ async function loadIncome() {
 
             incomeLuisElem.textContent = formatIncome(luisEntry?.amount) ?? '';
             incomeSaraElem.textContent = formatIncome(saraEntry?.amount) ?? '';
-
-            console.log("displaying incomes - with data");
         }else{
             //There is no data
 
             incomeLuisElem.textContent = formatIncome(0);
             incomeSaraElem.textContent = formatIncome(0);
-
-            console.log("displaying incomes - with no data");
         }
 
         recalcIncome();
@@ -190,18 +196,12 @@ function recalcIncome() {
     const luis = parseFloat(document.getElementById('incomeLuis').textContent) || 0;
     const sara = parseFloat(document.getElementById('incomeSara').textContent) || 0;
     totalIncome = luis + sara;
-
-    console.log("recalcIncome - totalIncome:",totalIncome);
     updateSummary();
     // Update all slider maxes
     document.querySelectorAll('.budget-slider').forEach(s => {
         s.max = totalIncome > 0 ? totalIncome : 5000;
     });
 }
-
-//document.getElementById('incomeLuis').addEventListener('input', recalcIncome);
-//document.getElementById('incomeSara').addEventListener('input', recalcIncome);
-
 
 async function upsertIncome(incomeValue, userName) {
 
@@ -290,6 +290,11 @@ function renderBudgetRow(cat){
             <div class="budget-amounts">
                 <span class="${over ? 'over' : 'spent'}">€${spent.toFixed(2)}</span>
                 <span style="color:var(--border)"> / </span>
+                <span class="budget-display editable"
+                    data-type="budget"
+                    data-category="${escapeAttr(cat)}">
+                    ${budget.toFixed(2)}
+                </span>
                 <span>€<span class="budget-display">${budget.toFixed(2)}</span></span>
             </div>
         </div>
@@ -316,6 +321,14 @@ function renderBudgetRow(cat){
 function renderBudgetList() {
     const list = document.getElementById('budgetList');
 
+    list.addEventListener('click', (e) => {
+        const span = e.target.closest('.editable');
+
+        if (!span) return;
+
+        makeEditable(span);
+    });
+
     // Use categories from localStorage, fall back to keys from existing budget
     /*const cats = CATEGORIES.length
         ? Object.keys(CATEGORIES)
@@ -339,6 +352,12 @@ function renderBudgetList() {
     });
 
     const renderGroup = (groupCats) => groupCats.map(cat => renderBudgetRow(cat)).join('');
+
+    document.querySelectorAll('.editable-budget').forEach(span => {
+        span.addEventListener('click', () => {
+            makeBudgetEditable(span);
+        });
+    });
 
     list.innerHTML =
         renderGroup(splitUnequally) +

@@ -996,6 +996,35 @@ input[type="email"]:focus, input[type="password"]:focus {
 .budget-amounts .spent { color: var(--text); font-weight: 500; }
 .budget-amounts .over { color: var(--error); font-weight: 500; }
 
+.budget-display {
+    font-size: 0.9rem;   /* bigger than 0.75rem parent */
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.budget-display:hover {
+    color: var(--accent);
+}
+
+.budget-value-input {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--accent);
+    outline: none;
+    padding: 0.2rem 0;
+    width: 100%;
+}
+
+.budget-value,
+.budget-value-input {
+    transition: all 0.15s ease;
+}
+
 /* Progress bar */
 .budget-progress-track {
     height: 4px;
