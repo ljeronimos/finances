@@ -117,7 +117,7 @@ function makeEditable(span) {
         input.replaceWith(span);
     };
 
-    input.addEventListener('blur', save);
+    input.addEventListener('blur', cancel);
 
     input.addEventListener('keydown', e => {
         if (e.key === 'Enter') save();
