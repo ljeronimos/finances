@@ -81,7 +81,7 @@ function makeEditable(span) {
 
     console.log("Displayed income pressed. Making editable...");
 
-    const oldValue = span.textContent.replace(',', '');
+    const oldValue = span.textContent.replace(',', '.');
     const input = document.createElement('input');
 
     let saved = false;

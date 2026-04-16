@@ -63,7 +63,7 @@ export async function onRequestPost(context) {
         amount: e.amount,
     }));
 
-    const res = await fetch(`${env.SUPABASE_URL}/rest/v1/monthly_income`, {
+    const res = await fetch(`${env.SUPABASE_URL}/rest/v1/monthly_income?on_conflict=user_name,year,month`, {
         method: 'POST',
         headers,
         body: JSON.stringify(records),
