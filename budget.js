@@ -99,7 +99,7 @@ function makeEditable(span) {
     input.min = '0';
     input.value = oldValue ?? '';
 
-    input.className = type === 'income' ? 'income-value-input' : 'budget-value-input'
+    input.className = type === 'income' ? 'income-value-input' : 'budget-input-inline'
     //input.className = 'income-value-input';
     //input.className = 'value-input';
 
@@ -295,7 +295,6 @@ function renderBudgetRow(cat){
                     data-category="${escapeAttr(cat)}">
                     ${budget.toFixed(2)}
                 </span>
-                <span>€<span class="budget-display">${budget.toFixed(2)}</span></span>
             </div>
         </div>
         <div class="budget-progress-track">

@@ -1007,22 +1007,20 @@ input[type="email"]:focus, input[type="password"]:focus {
     color: var(--accent);
 }
 
-.budget-value-input {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text);
-    background: transparent;
+.budget-input-inline {
+    width: 60px;
+    font-size: 0.8rem;
+    padding: 0.1rem 0;
     border: none;
-    border-bottom: 1px solid var(--accent);
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    text-align: right;
     outline: none;
-    padding: 0.2rem 0;
-    width: 100%;
 }
 
-.budget-value,
-.budget-value-input {
-    transition: all 0.15s ease;
+.budget-input-inline:focus {
+    border-color: var(--accent);
 }
 
 /* Progress bar */
