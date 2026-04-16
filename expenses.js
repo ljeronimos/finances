@@ -38,6 +38,7 @@ function getDateRange(period) {
     const y = now.getFullYear();
     const m = now.getMonth();
 
+    //this_month (default)
     let fromDate = new Date(y, m, 1);
     let toDate = new Date(y, m + 1, 0);
     let label = now.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -45,32 +46,17 @@ function getDateRange(period) {
     
     switch (period) {
         case 'this_month':
-            //return {
-                //from: new Date(y, m, 1).toISOString().split('T')[0],
-                //to: new Date(y, m + 1, 0).toISOString().split('T')[0],
-                //label: now.toLocaleString('default', { month: 'long', year: 'numeric' }),
-            //};
             break;
         case 'last_month':
             fromDate = new Date(y, m - 1, 1);
             toDate = new Date(y, m, 0);
             label = new Date(y, m - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
             break;
-            //return {
-                //from: new Date(y, m - 1, 1).toISOString().split('T')[0],
-                //to: new Date(y, m, 0).toISOString().split('T')[0],
-                //label: new Date(y, m - 1).toLocaleString('default', { month: 'long', year: 'numeric' }),
-            //};
         case 'last_3_months':
             fromDate = new Date(y, m - 2, 1);
             toDate = new Date(y, m + 1, 0);
             label = 'Last 3 months';
             break;
-            //return {
-                //from: new Date(y, m - 2, 1).toISOString().split('T')[0],
-                //to: new Date(y, m + 1, 0).toISOString().split('T')[0],
-                //label: 'Last 3 months',
-            //};
         case 'last_6_months':
             fromDate = new Date(y, m - 5, 1);
             toDate = new Date(y, m + 1, 0);
@@ -81,16 +67,10 @@ function getDateRange(period) {
             toDate = new Date(y, 11, 31);
             label = `${y}`;
             break;
-            //return {
-                //from: new Date(y, 0, 1).toISOString().split('T')[0],
-                //to: new Date(y, 11, 31).toISOString().split('T')[0],
-                //label: `${y}`,
-            //};
         case 'all':
         default:
             return { from: null, to: null, label: 'All time' };
     }
-
 
     return {
         from: formatSupabaseDate(fromDate),
@@ -216,10 +196,6 @@ function formatDate(dateStr) {
     const [y, m, d] = dateStr.split('-');
     return `${d}/${m}/${y}`;
 }
-
-//function formatSupabaseDate(y, m, d) {
-//    return `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-//}
 
 function formatSupabaseDate(date) {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;

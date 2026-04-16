@@ -880,6 +880,56 @@ input[type="email"]:focus, input[type="password"]:focus {
 .income-input:focus { border-color: var(--accent); }
 .income-input::placeholder { color: var(--border); font-size: 1rem; }
 
+.income-display-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+}
+
+.income-value.updated {
+    border-color: var(--accent);
+}
+
+.income-value:empty::before {
+    content: "—";
+    color: var(--border);
+    font-size: 1rem;
+}
+
+.income-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    padding: 0.2rem 0;
+    cursor: pointer;
+    transition: border-color 0.2s, opacity 0.2s;
+}
+
+.income-value:hover {
+    border-color: var(--accent);
+    opacity: 0.85;
+}
+
+.income-value-input {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--accent);
+    outline: none;
+    padding: 0.2rem 0;
+    width: 100%;
+}
+
+.income-value,
+.income-value-input {
+    transition: all 0.15s ease;
+}
+
 .income-summary {
     display: flex;
     align-items: center;

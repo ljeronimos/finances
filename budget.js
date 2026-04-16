@@ -23,9 +23,6 @@ const CATEGORIES = JSON.parse(localStorage.getItem('categories') || '{}');
     const displayName = JSON.parse(localStorage.getItem('user_preferences')).display_name
         || session.user?.email;
 
-    /*const displayName = session.user?.user_metadata?.display_name
-        || localStorage.getItem('display_name')
-        || session.user?.email;*/
     document.getElementById('userBadge').textContent = displayName;
 
     renderMonthLabel();
@@ -79,7 +76,151 @@ async function loadAll() {
 
 // ── Income ────────────────────────────────────────────────────────────────────
 
+
+function makeEditable(span) {
+
+    console.log("Displayed income pressed. Making editable...");
+
+    const oldValue = span.textContent.replace(',', '');
+    const input = document.createElement('input');
+
+    let saved = false;
+
+    input.type = 'number';
+    input.step = '0.01';
+    input.min = '0';
+    input.value = oldValue;
+    input.className = 'income-value-input';
+
+    span.replaceWith(input);
+    input.focus();
+    input.select();
+
+    const save = () => {
+        console.log("Saving update");
+        if (saved) return;
+        
+        saved = true;
+
+        const newValue = parseFloat(input.value || 0).toFixed(2);
+
+        span.textContent = formatIncome(newValue);
+        input.replaceWith(span);
+
+        // TODO: save to backend here
+        updateIncome(newValue, span.dataset.name);
+    };
+
+    const cancel = () => {
+
+        console.log("Canceled update");
+        input.replaceWith(span);
+    };
+
+    input.addEventListener('blur', save);
+
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') save();
+        if (e.key === 'Escape') cancel();
+    });
+}
+
+function formatIncome(v){
+
+    if(v != null){
+        return Number(v).toLocaleString('pt-PT', { minimumFractionDigits: 2 });
+    }
+
+    return '';
+}
+
+function toggleIncomeGrid(element, luisIncome, saraIncome){
+
+    const incomeGrid = document.getElementById('income-grid');
+    const saveIncomeDiv = document.getElementById('saveIncomeDiv');
+
+    if(element==='display'){
+
+        incomeGrid.innerHTML = 
+            `<div class="income-card">
+                <div class="income-card-name">
+                    Luis
+                </div>
+                <div class="income-display-row">
+                    <span class="income-currency">€</span>
+                    <span class="income-value editable" 
+                        id="incomeLuis" 
+                        data-name="Luis">${luisIncome}</span>
+                </div>
+            </div>
+            <div class="income-card">
+                <div class="income-card-name">
+                    Sara
+                </div>
+                <div class="income-display-row">
+                    <span class="income-currency">€</span>
+                    <span class="income-value editable" 
+                        id="incomeSara" 
+                        data-name="Sara">${saraIncome}</span>
+                </div>
+            </div>`;
+
+        /* document.querySelectorAll('.editable').forEach(span => {
+            span.addEventListener('click', () => {
+                makeEditable(span);
+            });
+        }); */
+
+        incomeGrid.addEventListener('click', e => {
+            if (e.target.classList.contains('editable')) {
+                makeEditable(e.target);
+            }
+        });
+
+        saveIncomeDiv.innerHTML = '';
+
+    }else if(element==='input'){
+
+        incomeGrid.innerHTML = 
+            `<div class="income-card">
+                <div class="income-card-name">
+                    Luis
+                </div>
+                <div class="income-display-row">
+                    <span class="income-currency">€</span>
+                    <input type="number" class="income-value-input" id="incomeLuis"
+                        placeholder="0" min="0" step="0.01" inputmode="decimal" />
+                </div>
+            </div>
+            <div class="income-card">
+                <div class="income-card-name">
+                    Sara
+                </div>
+                <div class="income-display-row">
+                    <span class="income-currency">€</span>
+                    <input type="number" class="income-value-input" id="incomeSara"
+                        placeholder="0" min="0" step="0.01" inputmode="decimal" />
+                </div>
+            </div>`;
+        
+        saveIncomeDiv.innerHTML = 
+            `<button class="btn-submit" id="saveIncomeBtn" style="margin-bottom:1.5rem">
+                Save Income
+            </button>`;
+
+        document.getElementById('incomeLuis').addEventListener('input', recalcIncome);
+        document.getElementById('incomeSara').addEventListener('input', recalcIncome);
+
+        document.getElementById('saveIncomeBtn').addEventListener('click', saveNewIncome);
+    }
+}
+
 async function loadIncome() {
+
+    console.log("In loadIncome - currentYear: "+currentYear+" currentMonth: "+currentMonth);
+
+    const isCurrentMonth = currentYear === now.getFullYear() && currentMonth === now.getMonth() + 1;
+
     try {
         const res = await fetch(
             `/api/budget/income?year=${currentYear}&month=${currentMonth}`,
@@ -88,17 +229,32 @@ async function loadIncome() {
         if (!res.ok) return;
         const data = await res.json();
 
-        const luisEntry = data.find(r => r.user_name === 'Luis');
-        const saraEntry = data.find(r => r.user_name === 'Sara');
+        console.log("loadIncome - data:",data);
 
-        const isCurrentMonth = currentYear === now.getFullYear() && currentMonth === now.getMonth() + 1;
+        if(data.length){
+            //There is data - show income as text
 
-        document.getElementById('incomeLuis').value = luisEntry?.amount || '';
-        document.getElementById('incomeSara').value = saraEntry?.amount || '';
+            const luisEntry = data.find(r => r.user_name === 'Luis');
+            const saraEntry = data.find(r => r.user_name === 'Sara');
+
+            toggleIncomeGrid(
+                'display',
+                formatIncome(luisEntry?.amount) ?? '',
+                formatIncome(saraEntry?.amount) ?? '');
+
+            console.log("displaying incomes");
+
+        }else{
+            //There is no data - show income input box
+
+            toggleIncomeGrid('input', null, null);
+
+            console.log("displaying inputs for incomes");
+        }
 
         // Green dot — show if income was entered for this specific month
-        document.getElementById('luisDot').classList.toggle('visible', !!luisEntry);
-        document.getElementById('saraDot').classList.toggle('visible', !!saraEntry);
+        /* document.getElementById('luisDot').classList.toggle('visible', !!luisEntry);
+        document.getElementById('saraDot').classList.toggle('visible', !!saraEntry); */
 
         recalcIncome();
     } catch {
@@ -117,10 +273,13 @@ function recalcIncome() {
     });
 }
 
-document.getElementById('incomeLuis').addEventListener('input', recalcIncome);
-document.getElementById('incomeSara').addEventListener('input', recalcIncome);
+//document.getElementById('incomeLuis').addEventListener('input', recalcIncome);
+//document.getElementById('incomeSara').addEventListener('input', recalcIncome);
 
-document.getElementById('saveIncomeBtn').addEventListener('click', async () => {
+async function saveNewIncome(){
+
+    console.log("save button pressed. Saving new income");
+
     const luis = parseFloat(document.getElementById('incomeLuis').value) || 0;
     const sara = parseFloat(document.getElementById('incomeSara').value) || 0;
 
@@ -144,15 +303,49 @@ document.getElementById('saveIncomeBtn').addEventListener('click', async () => {
 
         if (!res.ok) throw new Error('Failed to save income');
         showToast('Income saved');
-        document.getElementById('luisDot').classList.toggle('visible', luis > 0);
-        document.getElementById('saraDot').classList.toggle('visible', sara > 0);
+        //document.getElementById('luisDot').classList.toggle('visible', luis > 0);
+        //document.getElementById('saraDot').classList.toggle('visible', sara > 0);
+
+        toggleIncomeGrid('display',formatIncome(luis),formatIncome(sara));
     } catch (err) {
         showToast(err.message, 'error');
     } finally {
         btn.disabled = false;
         btn.textContent = 'Save Income';
     }
-});
+}
+
+async function updateIncome(newIncome, userName) {
+
+    console.log("UpdateIncome");
+
+    try {
+        const res = await fetch('/api/budget/income', {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({
+                year: currentYear,
+                month: currentMonth,
+                entries: [
+                    { user_name: userName, amount: newIncome }
+                ]
+            })
+        });
+
+        if (!res.ok) throw new Error('Failed to update income');
+        showToast('Income updated');
+        //document.getElementById('luisDot').classList.toggle('visible', luis > 0);
+        //document.getElementById('saraDot').classList.toggle('visible', sara > 0);
+
+        //toggleIncomeGrid('display',formatIncome(luis),formatIncome(sara));
+    } catch (err) {
+        showToast(err.message, 'error');
+    } //finally {
+        //btn.disabled = false;
+        //btn.textContent = 'Save Income';
+    //}
+    
+}
 
 // ── Budget ────────────────────────────────────────────────────────────────────
 

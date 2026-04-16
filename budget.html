@@ -37,29 +37,33 @@
         <!-- ── Income ── -->
         <div class="section-title">Income</div>
 
-        <div class="income-grid">
-            <div class="income-card">
+        <div class="income-grid" id="income-grid">
+            <!-- <div class="income-card">
                 <div class="income-card-name">
                     Luis
-                    <div class="income-updated-dot" id="luisDot" title="Updated this month"></div>
                 </div>
-                <div class="income-input-row">
+                <div class="income-display-row">
                     <span class="income-currency">€</span>
-                    <input type="number" class="income-input" id="incomeLuis"
+                    <span class="income-value editable" 
+                        id="incomeLuis" 
+                        data-name="Luis">-</span> 
+                    <input type="number" class="income-value-input" id="incomeLuis"
                            placeholder="0" min="0" step="0.01" inputmode="decimal" />
                 </div>
             </div>
             <div class="income-card">
                 <div class="income-card-name">
                     Sara
-                    <div class="income-updated-dot" id="saraDot" title="Updated this month"></div>
                 </div>
-                <div class="income-input-row">
+                <div class="income-display-row">
                     <span class="income-currency">€</span>
-                    <input type="number" class="income-input" id="incomeSara"
+                    <span class="income-value editable" 
+                        id="incomeSara" 
+                        data-name="Sara">-</span>
+                    <input type="number" class="income-value-input" id="incomeSara"
                            placeholder="0" min="0" step="0.01" inputmode="decimal" />
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="income-summary">
@@ -79,10 +83,12 @@
             </div>
         </div>
 
-        <button class="btn-submit" id="saveIncomeBtn" style="margin-bottom:1.5rem">
-            Save Income
-        </button>
-
+        <div id="saveIncomeDiv">
+            <button class="btn-submit" id="saveIncomeBtn" style="margin-bottom:1.5rem">
+                Save Income
+            </button>
+        </div>
+        
         <div class="divider"></div>
 
         <!-- ── Budget ── -->
