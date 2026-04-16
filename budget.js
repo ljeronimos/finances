@@ -140,87 +140,6 @@ function formatIncome(v){
     return '';
 }
 
-/* function toggleIncomeGrid(element, luisIncome, saraIncome){
-
-    const incomeGrid = document.getElementById('income-grid');
-    const saveIncomeDiv = document.getElementById('saveIncomeDiv');
-
-    if(element==='display'){
-
-        incomeGrid.innerHTML = 
-            `<div class="income-card">
-                <div class="income-card-name">
-                    Luis
-                </div>
-                <div class="income-display-row">
-                    <span class="income-currency">€</span>
-                    <span class="income-value editable" 
-                        id="incomeLuis" 
-                        data-name="Luis">${luisIncome}</span>
-                </div>
-            </div>
-            <div class="income-card">
-                <div class="income-card-name">
-                    Sara
-                </div>
-                <div class="income-display-row">
-                    <span class="income-currency">€</span>
-                    <span class="income-value editable" 
-                        id="incomeSara" 
-                        data-name="Sara">${saraIncome}</span>
-                </div>
-            </div>`;
-
-        /* document.querySelectorAll('.editable').forEach(span => {
-            span.addEventListener('click', () => {
-                makeEditable(span);
-            });
-        }); 
-
-        incomeGrid.addEventListener('click', e => {
-            if (e.target.classList.contains('editable')) {
-                makeEditable(e.target);
-            }
-        });
-
-        saveIncomeDiv.innerHTML = '';
-
-    }else if(element==='input'){
-
-        incomeGrid.innerHTML = 
-            `<div class="income-card">
-                <div class="income-card-name">
-                    Luis
-                </div>
-                <div class="income-display-row">
-                    <span class="income-currency">€</span>
-                    <input type="number" class="income-value-input" id="incomeLuis"
-                        placeholder="0" min="0" step="0.01" inputmode="decimal" />
-                </div>
-            </div>
-            <div class="income-card">
-                <div class="income-card-name">
-                    Sara
-                </div>
-                <div class="income-display-row">
-                    <span class="income-currency">€</span>
-                    <input type="number" class="income-value-input" id="incomeSara"
-                        placeholder="0" min="0" step="0.01" inputmode="decimal" />
-                </div>
-            </div>`;
-        
-        saveIncomeDiv.innerHTML = 
-            `<button class="btn-submit" id="saveIncomeBtn" style="margin-bottom:1.5rem">
-                Save Income
-            </button>`;
-
-        document.getElementById('incomeLuis').addEventListener('input', recalcIncome);
-        document.getElementById('incomeSara').addEventListener('input', recalcIncome);
-
-        document.getElementById('saveIncomeBtn').addEventListener('click', saveNewIncome);
-    }
-} */
-
 async function loadIncome() {
 
     console.log("In loadIncome - currentYear: "+currentYear+" currentMonth: "+currentMonth);
@@ -250,29 +169,15 @@ async function loadIncome() {
             incomeLuisElem.textContent = formatIncome(luisEntry?.amount) ?? '';
             incomeSaraElem.textContent = formatIncome(saraEntry?.amount) ?? '';
 
-            /* toggleIncomeGrid(
-                'display',
-                formatIncome(luisEntry?.amount) ?? '',
-                formatIncome(saraEntry?.amount) ?? ''); */
-
             console.log("displaying incomes - with data");
-
         }else{
             //There is no data
-
-            /* toggleIncomeGrid('input', null, null); */
 
             incomeLuisElem.textContent = formatIncome(0);
             incomeSaraElem.textContent = formatIncome(0);
 
             console.log("displaying incomes - with no data");
         }
-
-        
-
-        // Green dot — show if income was entered for this specific month
-        /* document.getElementById('luisDot').classList.toggle('visible', !!luisEntry);
-        document.getElementById('saraDot').classList.toggle('visible', !!saraEntry); */
 
         recalcIncome();
     } catch {
@@ -281,9 +186,12 @@ async function loadIncome() {
 }
 
 function recalcIncome() {
+
     const luis = parseFloat(document.getElementById('incomeLuis').value) || 0;
     const sara = parseFloat(document.getElementById('incomeSara').value) || 0;
     totalIncome = luis + sara;
+
+    console.log("recalcIncome - totalIncome:",totalIncome);
     updateSummary();
     // Update all slider maxes
     document.querySelectorAll('.budget-slider').forEach(s => {
@@ -294,44 +202,6 @@ function recalcIncome() {
 //document.getElementById('incomeLuis').addEventListener('input', recalcIncome);
 //document.getElementById('incomeSara').addEventListener('input', recalcIncome);
 
-/* async function saveNewIncome(){
-
-    console.log("save button pressed. Saving new income");
-
-    const luis = parseFloat(document.getElementById('incomeLuis').value) || 0;
-    const sara = parseFloat(document.getElementById('incomeSara').value) || 0;
-
-    const btn = document.getElementById('saveIncomeBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Saving…';
-
-    try {
-        const res = await fetch('/api/budget/income', {
-            method: 'POST',
-            headers: getAuthHeaders(),
-            body: JSON.stringify({
-                year: currentYear,
-                month: currentMonth,
-                entries: [
-                    { user_name: 'Luis', amount: luis },
-                    { user_name: 'Sara', amount: sara },
-                ],
-            }),
-        });
-
-        if (!res.ok) throw new Error('Failed to save income');
-        showToast('Income saved');
-        //document.getElementById('luisDot').classList.toggle('visible', luis > 0);
-        //document.getElementById('saraDot').classList.toggle('visible', sara > 0);
-
-        toggleIncomeGrid('display',formatIncome(luis),formatIncome(sara));
-    } catch (err) {
-        showToast(err.message, 'error');
-    } finally {
-        btn.disabled = false;
-        btn.textContent = 'Save Income';
-    }
-} */
 
 async function upsertIncome(incomeValue, userName) {
 
@@ -352,17 +222,12 @@ async function upsertIncome(incomeValue, userName) {
 
         if (!res.ok) throw new Error('Failed to update income');
         showToast('Income upserted');
-        //document.getElementById('luisDot').classList.toggle('visible', luis > 0);
-        //document.getElementById('saraDot').classList.toggle('visible', sara > 0);
 
-        //toggleIncomeGrid('display',formatIncome(luis),formatIncome(sara));
     } catch (err) {
         showToast(err.message, 'error');
-    } //finally {
-        //btn.disabled = false;
-        //btn.textContent = 'Save Income';
-    //}
-    
+    }    
+
+    recalcIncome();
 }
 
 // ── Budget ────────────────────────────────────────────────────────────────────
@@ -547,7 +412,13 @@ function updateBudgetTotals() {
 }
 
 function updateSummary() {
+
+    console.log("updateSummary - totalIncome: "+totalIncome);
+
     const totalBudgeted = Object.values(budgetValues).reduce((s, v) => s + v, 0);
+
+    console.log("totalBudgeted: "+totalBudgeted);
+
     const remaining = totalIncome - totalBudgeted;
 
     document.getElementById('summaryIncome').textContent = `€${totalIncome.toFixed(2)}`;
