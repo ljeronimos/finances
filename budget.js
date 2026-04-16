@@ -187,8 +187,8 @@ async function loadIncome() {
 
 function recalcIncome() {
 
-    const luis = parseFloat(document.getElementById('incomeLuis').value) || 0;
-    const sara = parseFloat(document.getElementById('incomeSara').value) || 0;
+    const luis = parseFloat(document.getElementById('incomeLuis').textContent) || 0;
+    const sara = parseFloat(document.getElementById('incomeSara').textContent) || 0;
     totalIncome = luis + sara;
 
     console.log("recalcIncome - totalIncome:",totalIncome);
