@@ -1007,7 +1007,7 @@ input[type="email"]:focus, input[type="password"]:focus {
     color: var(--accent);
 }
 
-.budget-input-inline {
+/* .budget-input-inline {
     width: 10px;
     font-size: 0.8rem;
     padding: 0.1rem 0;
@@ -1017,6 +1017,20 @@ input[type="email"]:focus, input[type="password"]:focus {
     color: var(--text);
     text-align: right;
     outline: none;
+} */
+
+.budget-amounts input.budget-input-inline {
+    width: 60px !important;
+    min-height: auto;
+    padding: 0.1rem 0;
+    font-size: 0.8rem;
+
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+
+    text-align: right;
 }
 
 .budget-input-inline:focus {
