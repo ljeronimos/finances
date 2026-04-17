@@ -1020,17 +1020,23 @@ input[type="email"]:focus, input[type="password"]:focus {
 } */
 
 .budget-amounts input.budget-input-inline {
-    width: 60px !important;
+    width: 80px !important;
     min-height: auto;
     padding: 0.1rem 0;
     font-size: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
 
-    border: none;
+    border: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-    border-radius: 0;
-    background: transparent;
+    border-radius: var(--radius);
+    background: var(--bg);
 
     text-align: right;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
 }
 
 .budget-input-inline:focus {
