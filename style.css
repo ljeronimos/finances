@@ -1008,7 +1008,7 @@ input[type="email"]:focus, input[type="password"]:focus {
 }
 
 .budget-input-inline {
-    width: 60px;
+    width: 10px;
     font-size: 0.8rem;
     padding: 0.1rem 0;
     border: none;

@@ -78,7 +78,7 @@ async function loadAll() {
 const incomeGrid = document.getElementById('income-grid');
 
 incomeGrid.addEventListener('click', e => {
-    if (e.target.classList.contains('editable-income')) {
+    if (e.target.classList.contains('editable')) {
         makeEditable(e.target);
     }
 });
